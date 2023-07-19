@@ -119,7 +119,7 @@ function calculateFeaturesOnCurrentTile(canvasRef, mobilenet) {
 // Predict and do some other bullshit, actually
 function predict() {
   try {
-    canvasContainer.removeChild(grid);
+    grid.classList.add("hidden");
 
     tf.tidy(() => {
       const pieceKeys = Object.keys(chessPiecesLookup);
