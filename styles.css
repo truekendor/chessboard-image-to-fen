@@ -44,7 +44,7 @@ body {
   --label-bg-color: hsl(40, 9%, 16%);
   --label-bg-color-hover: hsl(40, 9%, 19%);
 
-  --outline-color: rgb(234, 225, 209);
+  --outline-color: hsla(38, 31%, 80%, 0.75);
   --outline-subtle: rgba(255, 255, 255, 0.2);
 
   --canvas-width: 600px;
