@@ -1,3 +1,17 @@
 # chessboard-image-to-fen
 
-## TBA
+### Preview / Examples
+
+TBA
+
+### How to use
+
+TBA
+
+### Supported pieces
+
+TBA
+
+### About
+
+TBA

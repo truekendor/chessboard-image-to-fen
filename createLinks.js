@@ -12,3 +12,25 @@ export function createLichessLink(fen, reversedFen) {
 
   return [linkLichess, linkLichessReversed];
 }
+
+export function createCopyButtons(fen, reversedFen) {
+  const buttonWhite = document.createElement("button");
+  const buttonBlack = document.createElement("button");
+
+  buttonWhite.classList.add("copy-btn");
+  buttonBlack.classList.add("copy-btn");
+
+  buttonWhite.textContent = "Copy FEN";
+  buttonBlack.textContent = "Copy FEN";
+
+  // listen to click
+  buttonWhite.addEventListener("click", () => {
+    navigator.clipboard.writeText(fen);
+  });
+
+  buttonBlack.addEventListener("click", () => {
+    navigator.clipboard.writeText(reversedFen);
+  });
+
+  return [buttonWhite, buttonBlack];
+}

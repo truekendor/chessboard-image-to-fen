@@ -30,7 +30,9 @@ body {
 
   --backdrop-color: rgba(0, 0, 0, 0.35);
   --link-bg-color: hsl(48, 12%, 14%);
-  --color-links: 28, 100%, 60%;
+  --color-links: hsl(28, 89%, 65%);
+  --color-links: 28, 89%, 65%;
+  /* --color-links: 28, 100%, 60%; */
 
   --switch-btn-color: hsl(40, 4%, 15%);
 
@@ -43,6 +45,7 @@ body {
   --label-bg-color-hover: hsl(40, 9%, 19%);
 
   --outline-color: rgb(234, 225, 209);
+  --outline-subtle: rgba(255, 255, 255, 0.2);
 
   --canvas-width: 600px;
 }
@@ -103,6 +106,10 @@ header {
   background-color: var(--header-bg-color);
 }
 
+header h3 {
+  font-size: 1.8rem;
+}
+
 .image-input-label {
   display: flex;
   justify-content: center;
@@ -114,6 +121,8 @@ header {
   border-radius: 4px;
 
   margin-block: 0.4rem;
+
+  outline: 1px solid var(--outline-subtle);
 
   cursor: pointer;
   transition: background-color 80ms ease;
@@ -245,6 +254,7 @@ canvases
 
 .main-canvas,
 .helper-canvas {
+  flex-shrink: 1;
   width: var(--canvas-width);
   max-width: 100%;
 
@@ -349,30 +359,74 @@ bottom panel / footer
 
   background-color: var(--footer-bg-color);
 
-  min-height: 15%;
-  height: 17%;
+  min-height: 14%;
+  height: 10%;
 
   position: relative;
 }
 
-.links a {
-  text-align: center;
+.link-wrapper {
+  display: flex;
+}
 
-  width: 80%;
+.links a {
+  font-family: monospace;
 
   color: hsl(var(--color-links));
   font-weight: 600;
+  font-size: 1.2rem;
 
+  text-align: center;
   text-decoration: none;
 
   padding-block: 0.2rem;
   background-color: var(--link-bg-color);
 
   border-radius: 4px;
+
+  padding-inline: 0.4rem;
+
+  outline: 1px solid var(--outline-subtle);
 }
 
 .links a:hover {
   text-decoration: underline;
+}
+
+.copy-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding-inline: 0.5rem;
+
+  outline: transparent;
+  border: transparent;
+
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+
+  cursor: pointer;
+
+  background-color: transparent;
+  outline: 1px solid var(--outline-subtle);
+
+  font-size: 1rem;
+  color: var(--font-color-main);
+  font-weight: 600;
+
+  border-left: 1px solid var(--outline-subtle);
+
+  transition: background-color 80ms ease;
+}
+
+.copy-btn:hover,
+.copy-btn:focus-visible {
+  background-color: var(--link-bg-color);
+}
+
+.copy-btn:focus-visible {
+  outline: 1px solid var(--outline-color);
 }
 
 /* 
@@ -422,13 +476,6 @@ utils
 
 .pointer-none {
   pointer-events: none;
-}
-
-.horizontal-line {
-  width: 70%;
-  height: 1px;
-
-  margin-block: 0.4rem;
 }
 
 .hidden {

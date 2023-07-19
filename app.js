@@ -9,7 +9,7 @@ import {
 import { ChessBoardCanvas } from "./pieceHelper.js";
 import { chessPiecesLookup } from "./pieceData.js";
 import { appendLoader, removeLoader } from "./loaderCanvas.js";
-import { createLichessLink } from "./createLinks.js";
+import { createCopyButtons, createLichessLink } from "./createLinks.js";
 
 const fileInput = document.querySelector("#image-input");
 
@@ -114,6 +114,7 @@ function calculateFeaturesOnCurrentTile(canvasRef, mobilenet) {
   }
 }
 
+// Predict and do some other bullshit, actually
 function predict() {
   try {
     tf.tidy(() => {
@@ -173,32 +174,32 @@ function predict() {
         });
       });
 
-      // https://lichess.org/editor/qQRPKQQp/QkNNkPbp/NrpkbRBn/qpkQppBR/PqnRkQKB/rbBBPRqn/rNQBrBkN/PqRPNBbk_w_-_-_0_1?color=white
-      const board = new ChessBoardCanvas(helperCanvas.width);
+      // https_NBbk_w_-_-_0_1?color=white
+
       const [parsedFen, reversedFen] = parseFenFromArray(fen);
 
-      board.clearBoard();
-      board.drawChessboardFromFen(
-        normalizeFenString(parsedFen).filter((el) => el !== "/")
-      );
-      fenImageData.white = board.imageData;
+      // saves predicted images to fenImageData object
+      savePredictedImages(parsedFen, reversedFen);
 
-      board.clearBoard();
-      board.drawChessboardFromFen(
-        normalizeFenString(reversedFen).filter((el) => el !== "/")
-      );
+      const wrapper_1 = document.createElement("div");
+      const wrapper_2 = document.createElement("div");
+      wrapper_1.classList.add("link-wrapper");
+      wrapper_2.classList.add("link-wrapper");
 
-      fenImageData.black = board.imageData;
-      const dividerLine = document.createElement("div");
-      dividerLine.classList.add("horizontal-line");
       const [linkLichess, linkLichessReversed] = createLichessLink(
         parsedFen,
         reversedFen
       );
+      const [copyWhite, copyBlack] = createCopyButtons(parsedFen, reversedFen);
+
+      wrapper_1.append(linkLichess, copyWhite);
+      wrapper_2.append(linkLichessReversed, copyBlack);
+
+      // to get rid of children nodes
       linkContainer.innerHTML = "";
 
-      linkContainer.append(linkLichess, linkLichessReversed);
-      linkContainer.append(dividerLine);
+      linkContainer.append(wrapper_1, wrapper_2);
+      // linkContainer.append(linkLichess, linkLichessReversed);
     });
   } catch (e) {
     console.log(e.message);
@@ -212,6 +213,24 @@ function createInfoText() {
   infoDiv.append(h2);
 
   infoDiv.classList.remove("hidden");
+}
+
+function savePredictedImages(fen, reversedFen) {
+  const board = new ChessBoardCanvas(helperCanvas.width);
+
+  // save predicted fen images
+  board.clearBoard();
+  board.drawChessboardFromFen(
+    normalizeFenString(fen).filter((el) => el !== "/")
+  );
+  fenImageData.white = board.imageData;
+
+  board.clearBoard();
+  board.drawChessboardFromFen(
+    normalizeFenString(reversedFen).filter((el) => el !== "/")
+  );
+
+  fenImageData.black = board.imageData;
 }
 
 // * =================
