@@ -275,7 +275,7 @@ canvases
 
 .main-canvas,
 .helper-canvas {
-  width: 100%;
+  width: 96%;
   max-width: var(--canvas-width);
 
   aspect-ratio: 1/1;
@@ -295,8 +295,8 @@ canvases
   inset: 0;
   margin: auto;
 
-  width: var(--canvas-width);
-  max-width: 100%;
+  width: 96%;
+  max-width: var(--canvas-width);
 
   aspect-ratio: 1/1;
 
@@ -518,7 +518,7 @@ utils
 .drag-over {
   transition: background-color 0 400ms;
 
-  background-color: rgb(104, 94, 89);
+  background-color: rgb(61, 53, 49);
 }
 
 .pointer-none {
