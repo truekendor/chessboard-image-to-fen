@@ -53,7 +53,7 @@ function animate() {
 
 export function appendLoader() {
   const text = document.createElement("h3");
-  text.textContent = "Loading Mobilenet v3...";
+  text.textContent = "Loading Mobilenet...";
 
   modalBackdrop.append(text);
   modalBackdrop.append(canvas);

@@ -28,7 +28,7 @@ body {
 
   --body-bg-color: rgb(48, 46, 38);
 
-  --backdrop-color: rgba(0, 0, 0, 0.35);
+  --backdrop-color: rgba(0, 0, 0, 0.55);
   --link-bg-color: hsl(48, 12%, 14%);
   --color-links: 28, 100%, 60%;
 }
@@ -109,6 +109,21 @@ main area
   isolation: isolate;
 }
 
+.panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  flex-direction: column;
+
+  color: white;
+}
+
+h4.preview-message {
+  margin-block-start: 0.8rem;
+  margin-block-end: 0.4rem;
+}
+
 .preview-btn-container {
   display: flex;
   justify-content: center;
@@ -117,21 +132,6 @@ main area
   margin-block-end: 0.5rem;
 
   color: white;
-
-  position: relative;
-}
-
-.preview-btn-container::after {
-  content: "";
-  position: absolute;
-
-  height: 100%;
-  width: 1px;
-
-  background-color: currentColor;
-
-  inset: 0;
-  margin: auto;
 }
 
 /* 
@@ -141,7 +141,6 @@ switch buttons
 */
 
 .switch {
-  --border-radius: 10rem;
   outline: transparent;
   border: transparent;
 
@@ -159,13 +158,7 @@ switch buttons
 }
 
 .switch:first-child {
-  border-top-left-radius: var(--border-radius);
-  border-bottom-left-radius: var(--border-radius);
-}
-
-.switch:last-child {
-  border-top-right-radius: var(--border-radius);
-  border-bottom-right-radius: var(--border-radius);
+  margin-inline-end: 0.5rem;
 }
 
 /* 
@@ -189,8 +182,43 @@ canvases
   width: 600px;
   max-width: 100%;
 
-  background-color: rgb(42, 41, 40);
+  /* background-color: hsl(40, 9%, 13%);
+  background-color: hsl(40, 9%, 15%); */
   aspect-ratio: 1/1;
+
+  border-radius: 5px;
+}
+
+.main-canvas {
+  --light-dull: hsl(40, 9%, 15%);
+  --dark-dull: hsl(40, 9%, 11%);
+
+  background-color: var(--dark-dull);
+  opacity: 0.8;
+  background-image: repeating-linear-gradient(
+      45deg,
+      var(--light-dull),
+      25%,
+      transparent 25%,
+      transparent 75%,
+      var(--light-dull),
+      75%,
+      var(--light-dull)
+    ),
+    repeating-linear-gradient(
+      45deg,
+      var(--light-dull),
+      25%,
+      var(--dark-dull) 25%,
+      var(--dark-dull) 75%,
+      var(--light-dull),
+      75%,
+      var(--light-dull)
+    );
+  background-position: 0 0, 75px 75px;
+  background-size: 150px 150px;
+
+  box-shadow: 4px 4px 7px rgba(0, 0, 0, 0.463);
 }
 
 .helper-canvas {
@@ -226,10 +254,6 @@ Paste/Drop hint div
   color: rgb(194, 191, 184);
 
   pointer-events: none;
-}
-
-.info-div.hidden {
-  visibility: hidden;
 }
 
 .info-div h2 {
@@ -310,12 +334,14 @@ loader
 }
 
 .loader-backdrop h3 {
+  font-size: 2rem;
+
   color: white;
   user-select: none;
 }
 
 .canvas-loader {
-  margin-block-start: 1.2rem;
+  margin-block-start: 2.5rem;
 }
 
 /* 
@@ -339,4 +365,8 @@ utils
   height: 1px;
 
   margin-block: 0.4rem;
+}
+
+.hidden {
+  visibility: hidden;
 }

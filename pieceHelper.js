@@ -103,12 +103,11 @@ export class ChessBoardCanvas {
     this.drawPattern();
   }
 
-  drawPattern() {
+  drawPattern(light = this.#styles.light, dark = this.#styles.dark) {
     this.#c.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
-        this.#c.fillStyle =
-          (i + j) % 2 === 0 ? this.#styles.dark : this.#styles.light;
+        this.#c.fillStyle = (i + j) % 2 === 0 ? dark : light;
 
         this.#c.beginPath();
         this.#c.rect(

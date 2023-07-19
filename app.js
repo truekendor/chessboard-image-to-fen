@@ -49,6 +49,8 @@ const MOBILE_NET_INPUT_WIDTH = 224;
 const mobilenet = await loadMobilenetModel();
 const model = await tf.loadLayersModel("./model/model.json");
 
+createInfoText();
+
 const fenImageData = {
   white: undefined,
   black: undefined,
@@ -201,6 +203,16 @@ function predict() {
   }
 }
 
+function createInfoText() {
+  const h2 = document.createElement("h2");
+  h2.textContent = "Paste or Drop image here";
+
+  infoDiv.append(h2);
+
+  infoDiv.classList.remove("hidden");
+}
+
+// * =================
 // * =================
 // * EVENT LISTENERS
 

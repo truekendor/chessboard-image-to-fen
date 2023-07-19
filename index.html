@@ -14,15 +14,14 @@
       <h3>Choose file NOT YET IMPLEMENTED</h3>
       <input type="file" id="input" type="file" accept="image/*" />
       <label for="input"></label>
-
-      <h3>Drop here/Paste</h3>
     </header>
     <div class="main-container">
       <div class="panel">
         <div class="opacity-panel">
           <h4>Opacity</h4>
-          <input type="range" />
+          <input type="range" min="0" max="100" />
         </div>
+        <h4 class="preview-message">Click to Preview Prediction</h4>
         <div class="preview-btn-container">
           <button class="switch">White</button>
           <button class="switch">Black</button>
@@ -33,9 +32,7 @@
         <canvas class="helper-canvas"></canvas>
       </div>
 
-      <div class="info-div">
-        <h2>Paste or Drop image here</h2>
-      </div>
+      <div class="info-div hidden"></div>
     </div>
 
     <div class="links">
