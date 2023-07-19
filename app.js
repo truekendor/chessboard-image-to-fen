@@ -273,19 +273,6 @@ addEventListener("dragover", (e) => {
 
 // * =================
 // * preview button listeners
-
-// buttonBlack.addEventListener("pointerdown", () => {
-//   if (!fenImageData.black) return;
-
-//   ctx.putImageData(fenImageData.black, 0, 0);
-
-//   helperCanvas.classList.add("top");
-// });
-
-// // buttonBlack.addEventListener("pointerup", () => {
-//   helperCanvas.classList.remove("top");
-// });
-
 buttonWhite.addEventListener("pointerdown", () => {
   if (!fenImageData.white) return;
   ctx.putImageData(fenImageData.white, 0, 0);
