@@ -50,7 +50,7 @@ const MOBILE_NET_INPUT_WIDTH = 224;
 const mobilenet = await loadMobilenetModel();
 const model = await tf.loadLayersModel("./model/model.json");
 
-createInfoText();
+infoDiv.classList.remove("hidden");
 
 const fenImageData = {
   white: undefined,
@@ -175,8 +175,6 @@ function predict() {
         });
       });
 
-      // https_NBbk_w_-_-_0_1?color=white
-
       const [parsedFen, reversedFen] = parseFenFromArray(fen);
 
       // saves predicted images to fenImageData object
@@ -204,15 +202,6 @@ function predict() {
   } catch (e) {
     console.log(e.message);
   }
-}
-
-function createInfoText() {
-  const h2 = document.createElement("h2");
-  h2.textContent = "Paste or Drop image here";
-
-  infoDiv.append(h2);
-
-  infoDiv.classList.remove("hidden");
 }
 
 function savePredictedImages(fen, reversedFen) {

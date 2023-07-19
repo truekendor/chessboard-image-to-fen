@@ -1,3 +1,9 @@
+/**
+ * @param {array}
+ * Array with piece types as values
+ * ['q', '5', 'N', ...]
+ * @returns [string, string]
+ */
 export function parseFenFromArray(fenArray) {
   let fen = [];
 
@@ -7,8 +13,8 @@ export function parseFenFromArray(fenArray) {
     for (let j = 0; j < 8; j++) {
       const cur = fenArray[i * 8 + j];
 
-      // not empty
       // can be 's' as default for network output
+      // (i choose that at random at data gen stage)
       // and a number (usual fen string)
       if (!(cur === "s" || cur === " " || isNumber(cur))) {
         rowArray.push(cur);
@@ -34,6 +40,7 @@ export function parseFenFromArray(fenArray) {
     .reverse()
     .map((row) => row.split("").reverse().join(""))
     .join("/");
+
   fen = fen.join("/");
 
   return [fen, reversedFen];
@@ -43,8 +50,18 @@ export function isNumber(value) {
   return typeof parseInt(value) === "number" && !isNaN(parseInt(value));
 }
 
+/**
+ * @param {string}
+ * parses FEN string to be exactly 71 chars long
+ * by parsing each number to be series of '1'
+ * and joining it with '/'
+ *
+ * '3R3p' -> '111R111p'
+ *
+ * @returns {string.split('')}
+ */
 export function normalizeFenString(fen) {
-  let nFen = fen.split("");
+  let nFen = fen.split("").filter((el) => el !== "/");
   let answer = [];
   let fenLengthWithoutSlash = 0;
 

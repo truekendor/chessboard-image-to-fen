@@ -192,6 +192,42 @@ main area
   isolation: isolate;
 
   background-color: var(--body-bg-color);
+
+  /* 
+  background-color: #151516;
+opacity: 1;
+background: radial-gradient(circle, transparent 20%, #151516 20%, #151516 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, #151516 20%, #151516 80%, transparent 80%, transparent) 82.5px 82.5px, linear-gradient(#8a8a8a 6.6000000000000005px, transparent 6.6000000000000005px) 0 -3.3000000000000003px, linear-gradient(90deg, #8a8a8a 6.6000000000000005px, #151516 6.6000000000000005px) -3.3000000000000003px 0;
+background-size: 165px 165px, 165px 165px, 82.5px 82.5px, 82.5px 82.5px; */
+
+  /* opacity: 1;
+  background: radial-gradient(
+      circle,
+      transparent 20%,
+      var(--body-bg-color) 20%,
+      var(--body-bg-color) 80%,
+      transparent 80%,
+      transparent
+    ),
+    radial-gradient(
+        circle,
+        transparent 20%,
+        var(--body-bg-color) 20%,
+        var(--body-bg-color) 80%,
+        transparent 80%,
+        transparent
+      )
+      47.5px 47.5px,
+    linear-gradient(
+        #8a8a8a 3.8000000000000003px,
+        transparent 3.8000000000000003px
+      )
+      0 -1.9000000000000001px,
+    linear-gradient(
+        90deg,
+        #8a8a8a 3.8000000000000003px,
+        var(--body-bg-color) 3.8000000000000003px
+      ) -1.9000000000000001px 0;
+  background-size: 95px 95px, 95px 95px, 47.5px 47.5px, 47.5px 47.5px; */
 }
 
 .panel {
@@ -334,7 +370,8 @@ canvases
 
 .helper-canvas.top {
   visibility: visible;
-  /* opacity: 0.5; */
+
+  /* filter: drop-shadow(0 0 1rem rgba(147, 115, 85, 0.915)); */
 
   z-index: 2;
 }
@@ -375,9 +412,8 @@ Paste/Drop hint div
   color: rgb(194, 191, 184);
 
   pointer-events: none;
-}
 
-.info-div h2 {
+  font-weight: 600;
   font-size: 2rem;
   user-select: none;
 }
