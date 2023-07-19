@@ -18,9 +18,9 @@ input -> output
 
 ### How to use
 
-You can paste or drag&drop chessborad image directly 
+You can paste or drag&drop chessborad image directly on the web page
 
-Or from input at top of the page
+Or from the input at the top of the web page
 
 ### Important 
 
