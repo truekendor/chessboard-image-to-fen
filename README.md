@@ -1,17 +1,19 @@
 # chessboard-image-to-fen
 
+Chessboard image to FEN transformation using
+
+[TensorFlow.js](https://www.tensorflow.org/js), [MobileNet v3](https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v3_small_100_224/feature_vector/5/default/1)
+
+and transfer learning with small Net (256 x 32 x 13)
+
+[Live demo here](https://truekendor.github.io/chessboard-image-to-fen/)
+
 ### Preview / Examples
 
-TBA
+![Example](https://github.com/truekendor/chessboard-image-to-fen/blob/main/preview/preview_1.webp)
 
-### How to use
+![Example](https://github.com/truekendor/chessboard-image-to-fen/blob/main/preview/preview_2.webp)
 
-TBA
+### TBA
 
-### Supported pieces
-
-TBA
-
-### About
-
-TBA
+### TBA
