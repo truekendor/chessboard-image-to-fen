@@ -45,6 +45,8 @@ canvas.height = 600;
 helperCanvas.width = canvas.width;
 helperCanvas.height = canvas.height;
 
+const grid = document.querySelector(".chessboard");
+
 const URL = `https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v3_small_100_224/feature_vector/5/default/1`;
 const MOBILE_NET_INPUT_WIDTH = 224;
 
@@ -117,6 +119,8 @@ function calculateFeaturesOnCurrentTile(canvasRef, mobilenet) {
 // Predict and do some other bullshit, actually
 function predict() {
   try {
+    canvasContainer.removeChild(grid);
+
     tf.tidy(() => {
       const pieceKeys = Object.keys(chessPiecesLookup);
 

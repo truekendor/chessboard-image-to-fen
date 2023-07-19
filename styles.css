@@ -38,8 +38,8 @@ body {
 
   --font-color-main: rgb(224, 219, 215);
 
-  --dark-tile: hsl(40, 9%, 16%);
-  --light-tile: hsl(40, 9%, 12%);
+  --light-tile: hsl(40, 9%, 14%);
+  --dark-tile: hsl(40, 9%, 11%);
 
   --label-bg-color: hsl(40, 9%, 16%);
   --label-bg-color-hover: hsl(40, 9%, 19%);
@@ -116,6 +116,8 @@ header
   display: flex;
   justify-content: center;
   align-items: center;
+
+  padding-inline: 0.25rem;
 
   margin-block-end: 0.5rem;
 }
@@ -259,6 +261,7 @@ canvases
 */
 
 .canvas-container {
+  --canvas-margin-bottom: 0.5rem;
   position: relative;
   display: flex;
   justify-content: center;
@@ -266,49 +269,51 @@ canvases
   width: 100%;
 
   isolation: isolate;
+
+  overflow: hidden;
 }
 
 .main-canvas,
 .helper-canvas {
-  flex-shrink: 1;
-  width: var(--canvas-width);
-  max-width: 100%;
+  width: 100%;
+  max-width: var(--canvas-width);
 
-  /* background-color: hsl(40, 9%, 13%);
-  background-color: hsl(40, 9%, 15%); */
   aspect-ratio: 1/1;
 
   border-radius: 5px;
+
+  margin-block-end: var(--canvas-margin-bottom);
 }
 
 .main-canvas {
   background-color: var(--dark-tile);
 
-  background-image: repeating-linear-gradient(
-      45deg,
-      var(--light-tile),
-      25%,
-      transparent 25%,
-      transparent 75%,
-      var(--light-tile),
-      75%,
-      var(--light-tile)
-    ),
-    repeating-linear-gradient(
-      45deg,
-      var(--light-tile),
-      25%,
-      var(--dark-tile) 25%,
-      var(--dark-tile) 75%,
-      var(--light-tile),
-      75%,
-      var(--light-tile)
-    );
-  background-position: 0 0,
-    calc(var(--canvas-width) / 8) calc(var(--canvas-width) / 8);
-  background-size: calc(var(--canvas-width) / 4) calc(var(--canvas-width) / 4);
-
   box-shadow: 4px 4px 7px rgba(0, 0, 0, 0.463);
+}
+
+.chessboard {
+  contain: strict;
+
+  inset: 0;
+  margin: auto;
+
+  width: var(--canvas-width);
+  max-width: 100%;
+
+  aspect-ratio: 1/1;
+
+  position: absolute;
+
+  display: grid;
+  grid-template-rows: repeat(8, 1fr);
+  grid-template-columns: repeat(8, 1fr);
+
+  border-radius: 5px;
+
+  overflow: hidden;
+  margin-block-end: var(--canvas-margin-bottom);
+
+  pointer-events: none;
 }
 
 .helper-canvas {
@@ -327,6 +332,23 @@ canvases
   z-index: 2;
 }
 
+.tile {
+  grid-row: span 1;
+
+  background-color: var(--dark-tile);
+}
+
+.tile:nth-child(16n + 16),
+.tile:nth-child(16n + 14),
+.tile:nth-child(16n + 12),
+.tile:nth-child(16n + 10),
+.tile:nth-child(16n + 7),
+.tile:nth-child(16n + 5),
+.tile:nth-child(16n + 3),
+.tile:nth-child(16n + 1) {
+  background-color: var(--light-tile);
+}
+
 /* 
 ----------------
 Paste/Drop hint div
@@ -340,6 +362,8 @@ Paste/Drop hint div
   display: flex;
   justify-content: center;
   align-items: center;
+
+  padding: 1rem;
 
   color: rgb(194, 191, 184);
 
@@ -375,25 +399,24 @@ bottom panel / footer
 
   background-color: var(--footer-bg-color);
 
-  min-height: 14%;
-  height: 10%;
+  /* min-height: 14%; */
+  height: fit-content;
 
   position: relative;
 }
 
+.links:empty {
+  height: 15%;
+}
+
 .link-wrapper {
   display: flex;
+
+  padding: 0.5rem;
 }
 
 .links a {
-  font-family: monospace;
-
-  color: hsl(var(--color-links));
-  font-weight: 600;
-  font-size: 1.2rem;
-
-  text-align: center;
-  text-decoration: none;
+  word-break: break-all;
 
   padding-block: 0.2rem;
   background-color: var(--link-bg-color);
@@ -401,6 +424,16 @@ bottom panel / footer
   border-radius: 4px;
 
   padding-inline: 0.4rem;
+
+  font-family: monospace;
+
+  color: hsl(var(--color-links));
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.1;
+
+  text-align: center;
+  text-decoration: none;
 
   outline: 1px solid var(--outline-subtle);
 }
@@ -496,4 +529,18 @@ utils
 
 .hidden {
   visibility: hidden;
+}
+
+@media screen and (max-width: 610px) {
+  .links a {
+    contain: content;
+    font-size: 1rem;
+  }
+
+  .link-wrapper {
+    max-height: 3.5rem;
+
+    overflow: hidden;
+    isolation: isolate;
+  }
 }
