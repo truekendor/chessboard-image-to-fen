@@ -87,7 +87,7 @@ header
 ----------------
 */
 
-header {
+.header {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -106,8 +106,22 @@ header {
   background-color: var(--header-bg-color);
 }
 
-header h3 {
-  font-size: 1.8rem;
+.header p {
+  font-weight: 600;
+}
+
+.wrap {
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-block-end: 0.5rem;
+}
+
+.wrap label {
+  margin-inline-start: 1rem;
 }
 
 .image-input-label {
@@ -121,6 +135,8 @@ header h3 {
   border-radius: 4px;
 
   margin-block: 0.4rem;
+
+  text-align: center;
 
   outline: 1px solid var(--outline-subtle);
 
