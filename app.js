@@ -9,20 +9,17 @@ import {
 import { ChessBoardCanvas } from "./pieceHelper.js";
 import { chessPiecesLookup } from "./pieceData.js";
 import { appendLoader, removeLoader } from "./loaderCanvas.js";
-import { createCopyButtons, createLichessLink } from "./createLinks.js";
+import { createCopyButtons, createLichessLink } from "./createHelper.js";
 
 const fileInput = document.querySelector("#image-input");
 
 const mainContainer = document.querySelector(".main-container");
 // wrapper for buttons and heading
 const panel = document.querySelector(".panel");
-const buttonsContainer = panel.querySelector(".preview-btn-container");
 const canvasContainer = document.querySelector(".canvas-container");
 
-// prediction preview buttons
-const buttons = buttonsContainer.querySelectorAll("button");
-const buttonWhite = buttons[0];
-// const buttonBlack = buttons[1];
+// prediction preview button
+const buttonWhite = panel.querySelector(".switch");
 
 // container with Paste/Drop text
 const infoDiv = document.querySelector(".info-div");
@@ -185,10 +182,10 @@ function predict() {
       // saves predicted images to fenImageData object
       savePredictedImages(parsedFen, reversedFen);
 
-      const wrapper_1 = document.createElement("div");
-      const wrapper_2 = document.createElement("div");
-      wrapper_1.classList.add("link-wrapper");
-      wrapper_2.classList.add("link-wrapper");
+      const wrapperOne = document.createElement("div");
+      const wrapperTwo = document.createElement("div");
+      wrapperOne.classList.add("link-wrapper");
+      wrapperTwo.classList.add("link-wrapper");
 
       const [linkLichess, linkLichessReversed] = createLichessLink(
         parsedFen,
@@ -196,14 +193,13 @@ function predict() {
       );
       const [copyWhite, copyBlack] = createCopyButtons(parsedFen, reversedFen);
 
-      wrapper_1.append(linkLichess, copyWhite);
-      wrapper_2.append(linkLichessReversed, copyBlack);
+      wrapperOne.append(linkLichess, copyWhite);
+      wrapperTwo.append(linkLichessReversed, copyBlack);
 
       // to get rid of children nodes
       linkContainer.innerHTML = "";
 
-      linkContainer.append(wrapper_1, wrapper_2);
-      // linkContainer.append(linkLichess, linkLichessReversed);
+      linkContainer.append(wrapperOne, wrapperTwo);
     });
   } catch (e) {
     console.log(e.message);

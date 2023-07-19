@@ -3,35 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta name="theme-color" content="#302e26" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/x-icon" href="assets/icon.jpg" />
     <title>Chessboard image to FEN</title>
+
     <link rel="stylesheet" href="styles.css" />
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="app.js" defer type="module"></script>
   </head>
-  <body class="_light _brown">
+  <body>
     <header class="header">
-      <div class="wrap">
+      <div class="label-wrapper">
         <h3>Chessboard image to FEN</h3>
-        <label
-          class="image-input-label"
-          for="image-input"
-          tabindex="0"
-          aria-label="input"
-        >
+        <label class="image-input-label" for="image-input" aria-label="input">
+          <input type="file" id="image-input" type="file" accept="image/*" />
           <p>Choose file here</p>
         </label>
-        <input type="file" id="image-input" type="file" accept="image/*" />
       </div>
-
-      <p>Or paste / drop below</p>
     </header>
     <div class="main-container">
       <div class="panel">
-        <h4 class="preview-message">Click to Preview Prediction</h4>
-        <div class="preview-btn-container">
-          <button class="switch">Preview prediction</button>
-        </div>
+        <button class="switch">Preview prediction</button>
       </div>
       <div class="canvas-container">
         <canvas class="main-canvas"></canvas>

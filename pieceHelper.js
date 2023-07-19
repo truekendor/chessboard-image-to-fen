@@ -3,7 +3,7 @@ import { isNumber } from "./utils.js";
 const img = new Image();
 
 // Q K R N B P
-img.src = "pieces.png";
+img.src = "./assets/pieces.png";
 
 await img.decode();
 
@@ -16,7 +16,7 @@ class PieceHelper {
   constructor(img) {
     this.#canvas.width = img.width;
     this.#canvas.height = img.height;
-    // @ts-ignore
+
     this.#c.drawImage(img, 0, 0);
   }
 
@@ -80,16 +80,6 @@ export class ChessBoardCanvas {
   #c;
   #tileWidth;
 
-  // lichess tile colors
-  #styles = {
-    light: "rgb(247, 217, 181)",
-    dark: "rgb(181,136,99)",
-    lightPale: "hsl(33, 60%, 84%)",
-    darkPale: "hsl(27, 26%, 55%)",
-    // light: "purple",
-    // dark: "red",
-  };
-
   constructor(width) {
     this.#canvas = document.createElement("canvas");
     this.#c = this.#canvas.getContext("2d", {
@@ -99,41 +89,6 @@ export class ChessBoardCanvas {
 
     this.#canvas.width = width;
     this.#canvas.height = width;
-
-    this.drawPattern();
-  }
-
-  drawPattern(light = this.#styles.light, dark = this.#styles.dark) {
-    this.#c.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
-    for (let i = 0; i < 8; i++) {
-      for (let j = 0; j < 8; j++) {
-        this.#c.fillStyle = (i + j) % 2 === 0 ? dark : light;
-
-        this.#c.beginPath();
-        this.#c.rect(
-          j * this.#tileWidth,
-          i * this.#tileWidth,
-          this.#tileWidth,
-          this.#tileWidth
-        );
-        this.#c.fill();
-        this.#c.closePath();
-      }
-    }
-  }
-
-  // TODO delete with init pr
-  get patternCanvas() {
-    this.drawPattern();
-
-    return this.#canvas;
-  }
-
-  // TODO delete with init pr
-  get patternData() {
-    this.drawPattern();
-
-    return this.#c.getImageData(0, 0, this.#canvas.width, this.#canvas.width);
   }
 
   get imageData() {
@@ -144,7 +99,6 @@ export class ChessBoardCanvas {
     if (fen.length !== 64) {
       throw new Error("Invalid FEN length");
     }
-    // this.#c.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
     for (let i = 0; i < 64; i++) {
       const piece = fen[i];
 
