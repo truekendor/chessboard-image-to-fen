@@ -28,9 +28,23 @@ body {
 
   --body-bg-color: rgb(48, 46, 38);
 
-  --backdrop-color: rgba(0, 0, 0, 0.55);
+  --backdrop-color: rgba(0, 0, 0, 0.35);
   --link-bg-color: hsl(48, 12%, 14%);
   --color-links: 28, 100%, 60%;
+
+  --switch-btn-color: hsl(40, 4%, 15%);
+
+  --font-color-main: rgb(224, 219, 215);
+
+  --dark-tile: hsl(40, 9%, 16%);
+  --light-tile: hsl(40, 9%, 12%);
+
+  --label-bg-color: hsl(40, 9%, 16%);
+  --label-bg-color-hover: hsl(40, 9%, 19%);
+
+  --outline-color: rgb(234, 225, 209);
+
+  --canvas-width: 600px;
 }
 
 /* 
@@ -84,9 +98,42 @@ header {
 
   padding: 0.4rem;
 
-  color: white;
+  color: var(--font-color-main);
 
   background-color: var(--header-bg-color);
+}
+
+.image-input-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: var(--label-bg-color);
+
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+
+  margin-block: 0.4rem;
+
+  cursor: pointer;
+  transition: background-color 80ms ease;
+}
+
+.image-input-label:focus,
+.image-input-label:focus-within,
+.image-input-label:active {
+  outline: 1px solid var(--outline-color);
+  background-color: var(--label-bg-color-hover);
+}
+
+.image-input-label:hover {
+  background-color: var(--label-bg-color-hover);
+}
+
+#image-input {
+  visibility: hidden;
+  width: 0;
+  height: 0;
 }
 
 /* 
@@ -115,8 +162,9 @@ main area
   align-items: center;
 
   flex-direction: column;
+  margin-block-end: 0.6rem;
 
-  color: white;
+  color: var(--font-color-main);
 }
 
 h4.preview-message {
@@ -146,15 +194,33 @@ switch buttons
 
   color: inherit;
 
-  background-color: rgb(255, 89, 29);
+  background-color: transparent;
 
   font-size: 1rem;
   font-weight: 600;
 
   padding: 0.6rem 1rem;
 
-  cursor: pointer;
   user-select: none;
+
+  border-radius: 3px;
+
+  outline: 1px solid var(--outline-color);
+  will-change: contents;
+
+  transition: background-color 80ms ease, outline 70ms ease;
+}
+
+.switch:hover,
+.switch:focus-visible {
+  cursor: pointer;
+
+  background-color: var(--switch-btn-color);
+}
+
+.switch:focus-visible {
+  outline: 3px solid var(--outline-color);
+  background-color: var(--switch-btn-color);
 }
 
 .switch:first-child {
@@ -179,7 +245,7 @@ canvases
 
 .main-canvas,
 .helper-canvas {
-  width: 600px;
+  width: var(--canvas-width);
   max-width: 100%;
 
   /* background-color: hsl(40, 9%, 13%);
@@ -190,33 +256,31 @@ canvases
 }
 
 .main-canvas {
-  --light-dull: hsl(40, 9%, 15%);
-  --dark-dull: hsl(40, 9%, 11%);
+  background-color: var(--dark-tile);
 
-  background-color: var(--dark-dull);
-  opacity: 0.8;
   background-image: repeating-linear-gradient(
       45deg,
-      var(--light-dull),
+      var(--light-tile),
       25%,
       transparent 25%,
       transparent 75%,
-      var(--light-dull),
+      var(--light-tile),
       75%,
-      var(--light-dull)
+      var(--light-tile)
     ),
     repeating-linear-gradient(
       45deg,
-      var(--light-dull),
+      var(--light-tile),
       25%,
-      var(--dark-dull) 25%,
-      var(--dark-dull) 75%,
-      var(--light-dull),
+      var(--dark-tile) 25%,
+      var(--dark-tile) 75%,
+      var(--light-tile),
       75%,
-      var(--light-dull)
+      var(--light-tile)
     );
-  background-position: 0 0, 75px 75px;
-  background-size: 150px 150px;
+  background-position: 0 0,
+    calc(var(--canvas-width) / 8) calc(var(--canvas-width) / 8);
+  background-size: calc(var(--canvas-width) / 4) calc(var(--canvas-width) / 4);
 
   box-shadow: 4px 4px 7px rgba(0, 0, 0, 0.463);
 }
@@ -232,7 +296,7 @@ canvases
 
 .helper-canvas.top {
   visibility: visible;
-  opacity: 0.5;
+  /* opacity: 0.5; */
 
   z-index: 2;
 }

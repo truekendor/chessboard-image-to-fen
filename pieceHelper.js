@@ -140,10 +140,6 @@ export class ChessBoardCanvas {
     return this.#c.getImageData(0, 0, this.#canvas.width, this.#canvas.width);
   }
 
-  get canvas() {
-    return this.#canvas;
-  }
-
   drawChessboardFromFen(fen) {
     if (fen.length !== 64) {
       throw new Error("Invalid FEN length");
@@ -171,7 +167,7 @@ export class ChessBoardCanvas {
     return this.#canvas;
   }
 
-  clearCanvas() {
+  clearBoard() {
     this.#c.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
   }
 }

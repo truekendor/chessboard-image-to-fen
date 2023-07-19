@@ -11,8 +11,10 @@ import { chessPiecesLookup } from "./pieceData.js";
 import { appendLoader, removeLoader } from "./loaderCanvas.js";
 import { createLichessLink } from "./createLinks.js";
 
+const fileInput = document.querySelector("#image-input");
+
 const mainContainer = document.querySelector(".main-container");
-// wrapper for opacity slider and buttons
+// wrapper for buttons and heading
 const panel = document.querySelector(".panel");
 const buttonsContainer = panel.querySelector(".preview-btn-container");
 const canvasContainer = document.querySelector(".canvas-container");
@@ -143,6 +145,7 @@ function predict() {
         tileFeatures.push(feature);
       }
 
+      // calculate image features for each tile
       tileFeatures.forEach((feature) => {
         const prediction = model.predict(feature.expandDims()).squeeze();
 
@@ -151,6 +154,7 @@ function predict() {
         let maxValue = predictionArray[0];
         let maxIndex = 0;
 
+        // find index of tile with maximum value
         for (let i = 1; i < predictionArray.length; i++) {
           const cur = predictionArray[i];
 
@@ -160,6 +164,8 @@ function predict() {
           }
         }
 
+        // lookup piece type in chessPieceLookup and
+        // put prediction into the fen array
         pieceKeys.forEach((key) => {
           if (parseInt(key) === maxIndex) {
             fen.push(chessPiecesLookup[maxIndex]);
@@ -168,25 +174,21 @@ function predict() {
       });
 
       // https://lichess.org/editor/qQRPKQQp/QkNNkPbp/NrpkbRBn/qpkQppBR/PqnRkQKB/rbBBPRqn/rNQBrBkN/PqRPNBbk_w_-_-_0_1?color=white
-
       const board = new ChessBoardCanvas(helperCanvas.width);
       const [parsedFen, reversedFen] = parseFenFromArray(fen);
 
+      board.clearBoard();
       board.drawChessboardFromFen(
         normalizeFenString(parsedFen).filter((el) => el !== "/")
       );
-      const dataWhite = board.imageData;
+      fenImageData.white = board.imageData;
 
-      fenImageData.white = dataWhite;
-
-      board.drawPattern();
-
+      board.clearBoard();
       board.drawChessboardFromFen(
         normalizeFenString(reversedFen).filter((el) => el !== "/")
       );
 
-      const dataBlack = board.imageData;
-      fenImageData.black = dataBlack;
+      fenImageData.black = board.imageData;
       const dividerLine = document.createElement("div");
       dividerLine.classList.add("horizontal-line");
       const [linkLichess, linkLichessReversed] = createLichessLink(
@@ -274,4 +276,9 @@ buttonWhite.addEventListener("pointerdown", () => {
 
 buttonWhite.addEventListener("pointerup", () => {
   helperCanvas.classList.remove("top");
+});
+
+fileInput.addEventListener("change", async (e) => {
+  if (fileInput.files.length === 0) return;
+  await handleFileFromEvent(fileInput.files[0]);
 });

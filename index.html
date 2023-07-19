@@ -11,16 +11,25 @@
   </head>
   <body class="_light _brown">
     <header>
-      <h3>Choose file NOT YET IMPLEMENTED</h3>
-      <input type="file" id="input" type="file" accept="image/*" />
-      <label for="input"></label>
+      <h3>Chessboard image to FEN</h3>
+      <label
+        class="image-input-label"
+        for="image-input"
+        tabindex="0"
+        aria-label="input"
+      >
+        <p>Choose file <strong> here </strong></p>
+        <input type="file" id="image-input" type="file" accept="image/*" />
+      </label>
+      <p>Or paste / drop below</p>
     </header>
     <div class="main-container">
       <div class="panel">
-        <div class="opacity-panel">
-          <h4>Opacity</h4>
-          <input type="range" min="0" max="100" />
-        </div>
+        <!-- <div class="opacity-panel">
+          <h4>Preview opacity</h4>
+          <input id="opacity" type="range" min="0" max="100" />
+          <label for="opacity"></label>
+        </div> -->
         <h4 class="preview-message">Click to Preview Prediction</h4>
         <div class="preview-btn-container">
           <button class="switch">White</button>
