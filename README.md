@@ -14,6 +14,8 @@ and transfer learning
 
 ![Example](https://github.com/truekendor/chessboard-image-to-fen/blob/main/preview/preview_2.webp)
 
-### TBA
+### TODO
+
+- black perspective preview
 
 ### TBA
