@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chessboard image to FEN</title>
+    <link rel="stylesheet" href="styles.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="app.js" defer type="module"></script>
+  </head>
+  <body class="_light _brown">
+    <header>
+      <h3>Choose file NOT YET IMPLEMENTED</h3>
+      <input type="file" id="input" type="file" accept="image/*" />
+      <label for="input"></label>
+
+      <h3>Drop here/Paste</h3>
+    </header>
+    <div class="main-container">
+      <div class="panel">
+        <div class="opacity-panel">
+          <h4>Opacity</h4>
+          <input type="range" />
+        </div>
+        <div class="preview-btn-container">
+          <button class="switch">White</button>
+          <button class="switch">Black</button>
+        </div>
+      </div>
+      <div class="canvas-container">
+        <canvas class="main-canvas"></canvas>
+        <canvas class="helper-canvas"></canvas>
+      </div>
+
+      <div class="info-div">
+        <h2>Paste or Drop image here</h2>
+      </div>
+    </div>
+
+    <div class="links">
+      <!-- <a href="#" class="liches">Lichess White Perspective</a>
+      <a href="#" class="liches">Lichess Black Perspective</a> -->
+      <!-- <div class="horizontal-line"></div> -->
+      <!-- <a href="#" class="chess-com">ChessCom White Perspective</a> -->
+      <!-- <a href="#" class="chess-com">ChessCom Black Perspective</a> -->
+    </div>
+  </body>
+</html>

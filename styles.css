@@ -1,0 +1,342 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+
+  flex-direction: column;
+
+  font-family: Helvetica, Arial, sans-serif;
+
+  background-color: var(--body-bg-color);
+
+  position: relative;
+}
+
+:root {
+  --header-bg-color: rgb(24, 23, 18);
+  --footer-bg-color: rgb(24, 23, 18);
+
+  --body-bg-color: rgb(48, 46, 38);
+
+  --backdrop-color: rgba(0, 0, 0, 0.35);
+  --link-bg-color: hsl(48, 12%, 14%);
+  --color-links: 28, 100%, 60%;
+}
+
+/* 
+----------------
+themes (not implemented)
+----------------
+*/
+
+body.light {
+  --header-bg-color: rgb(120, 90, 255);
+  --footer-bg-color: rgb(120, 90, 255);
+
+  --body-bg-color: rgb(255, 255, 255);
+
+  --backdrop-color: rgba(0, 0, 0, 0.55);
+  /* ! CHANGE ME */
+  --link-bg-color: hsl(48, 12%, 14%);
+  --color-links: 28, 100%, 60%;
+}
+
+body.brown {
+  --header-bg-color: rgb(34, 30, 27);
+  --footer-bg-color: rgb(34, 30, 27);
+
+  --body-bg-color: rgb(255, 255, 255);
+
+  --backdrop-color: rgba(0, 0, 0, 0.55);
+  --link-bg-color: hsl(48, 100%, 99%);
+
+  --color-links: hsl(20, 6%, 9%);
+  --color-links: 20, 6%, 9%;
+}
+
+/* 
+----------------
+header
+----------------
+*/
+
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  flex-direction: column;
+
+  flex-grow: 1;
+  flex-shrink: 0;
+
+  width: 100%;
+
+  padding: 0.4rem;
+
+  color: white;
+
+  background-color: var(--header-bg-color);
+}
+
+/* 
+----------------
+main area
+----------------
+*/
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+
+  flex-direction: column;
+
+  position: relative;
+  isolation: isolate;
+}
+
+.preview-btn-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-block-end: 0.5rem;
+
+  color: white;
+
+  position: relative;
+}
+
+.preview-btn-container::after {
+  content: "";
+  position: absolute;
+
+  height: 100%;
+  width: 1px;
+
+  background-color: currentColor;
+
+  inset: 0;
+  margin: auto;
+}
+
+/* 
+----------------
+switch buttons
+----------------
+*/
+
+.switch {
+  --border-radius: 10rem;
+  outline: transparent;
+  border: transparent;
+
+  color: inherit;
+
+  background-color: rgb(255, 89, 29);
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  padding: 0.6rem 1rem;
+
+  cursor: pointer;
+  user-select: none;
+}
+
+.switch:first-child {
+  border-top-left-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
+}
+
+.switch:last-child {
+  border-top-right-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+}
+
+/* 
+----------------
+canvases
+----------------
+*/
+
+.canvas-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+
+  width: 100%;
+
+  isolation: isolate;
+}
+
+.main-canvas,
+.helper-canvas {
+  width: 600px;
+  max-width: 100%;
+
+  background-color: rgb(42, 41, 40);
+  aspect-ratio: 1/1;
+}
+
+.helper-canvas {
+  inset: 0;
+  margin: auto;
+  position: absolute;
+
+  visibility: hidden;
+  z-index: -1;
+}
+
+.helper-canvas.top {
+  visibility: visible;
+  opacity: 0.5;
+
+  z-index: 2;
+}
+
+/* 
+----------------
+Paste/Drop hint div
+----------------
+*/
+
+.info-div {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: rgb(194, 191, 184);
+
+  pointer-events: none;
+}
+
+.info-div.hidden {
+  visibility: hidden;
+}
+
+.info-div h2 {
+  font-size: 2rem;
+  user-select: none;
+}
+
+/* 
+----------------
+bottom panel / footer
+----------------
+*/
+
+.links {
+  display: grid;
+  place-items: center;
+
+  gap: 0.2rem;
+
+  grid-template-columns: 1fr;
+
+  width: 100%;
+
+  margin-block-start: auto;
+
+  padding-block: 0.8rem;
+
+  flex-direction: column;
+
+  background-color: var(--footer-bg-color);
+
+  min-height: 15%;
+  height: 17%;
+
+  position: relative;
+}
+
+.links a {
+  text-align: center;
+
+  width: 80%;
+
+  color: hsl(var(--color-links));
+  font-weight: 600;
+
+  text-decoration: none;
+
+  padding-block: 0.2rem;
+  background-color: var(--link-bg-color);
+
+  border-radius: 4px;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+/* 
+----------------
+loader
+----------------
+*/
+
+.loader-backdrop {
+  position: fixed;
+
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  flex-direction: column;
+
+  background-color: var(--backdrop-color);
+
+  z-index: 9999;
+}
+
+.loader-backdrop h3 {
+  color: white;
+  user-select: none;
+}
+
+.canvas-loader {
+  margin-block-start: 1.2rem;
+}
+
+/* 
+----------------
+utils
+----------------
+*/
+
+.drag-over {
+  transition: background-color 0 400ms;
+
+  background-color: rgb(104, 94, 89);
+}
+
+.pointer-none {
+  pointer-events: none;
+}
+
+.horizontal-line {
+  width: 70%;
+  height: 1px;
+
+  margin-block: 0.4rem;
+}
