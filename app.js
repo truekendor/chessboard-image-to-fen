@@ -22,7 +22,7 @@ const canvasContainer = document.querySelector(".canvas-container");
 // prediction preview buttons
 const buttons = buttonsContainer.querySelectorAll("button");
 const buttonWhite = buttons[0];
-const buttonBlack = buttons[1];
+// const buttonBlack = buttons[1];
 
 // container with Paste/Drop text
 const infoDiv = document.querySelector(".info-div");
@@ -274,17 +274,17 @@ addEventListener("dragover", (e) => {
 // * =================
 // * preview button listeners
 
-buttonBlack.addEventListener("pointerdown", () => {
-  if (!fenImageData.black) return;
+// buttonBlack.addEventListener("pointerdown", () => {
+//   if (!fenImageData.black) return;
 
-  ctx.putImageData(fenImageData.black, 0, 0);
+//   ctx.putImageData(fenImageData.black, 0, 0);
 
-  helperCanvas.classList.add("top");
-});
+//   helperCanvas.classList.add("top");
+// });
 
-buttonBlack.addEventListener("pointerup", () => {
-  helperCanvas.classList.remove("top");
-});
+// // buttonBlack.addEventListener("pointerup", () => {
+//   helperCanvas.classList.remove("top");
+// });
 
 buttonWhite.addEventListener("pointerdown", () => {
   if (!fenImageData.white) return;
