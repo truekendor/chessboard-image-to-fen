@@ -9,7 +9,7 @@ import {
 import { ChessBoardCanvas } from "./pieceHelper.js";
 import { chessPiecesLookup } from "./pieceData.js";
 import { appendLoader, removeLoader } from "./loaderCanvas.js";
-import { createCopyButtons, createLichessLink } from "./createHelper.js";
+import { createCopyButtons, createLichessLink } from "./creationHelper.js";
 
 const fileInput = document.querySelector("#image-input");
 
