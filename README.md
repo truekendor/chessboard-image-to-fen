@@ -4,7 +4,7 @@ Chessboard image to FEN convertation using [TensorFlow.js](https://www.tensorflo
 
 Model can recognize default lichess and chesscom pieces and quite a few other piece styles 
 
-[Convert your board here](https://truekendor.github.io/chessboard-image-to-fen/)
+## [Сonverter Here](https://truekendor.github.io/chessboard-image-to-fen/)
 
 ### Preview / Examples
 
@@ -16,20 +16,22 @@ input -> output
 
 ![Example](https://github.com/truekendor/chessboard-image-to-fen/blob/main/preview/preview_2.webp)
 
-### Quick preview feature
-
-TBA
-
 ### How to use
 
-You can paste or drag&drop chessborad image directly on the web page
+Copy or drag the chessboard image and wait for the model to finish converting.
 
-Or from the input at the top of the web page
+Alternatively, select the image in the file input at the top of the page
 
 ### Important 
 
-The image of the chessboard should be cropped at the edges of the board
+The chessboard image must be cropped around the edges of the chessboard
 
-***Small*** image cropping offsets should not affect the result much
+in order for conversion to work
 
-### TBA
+Small image cropping offsets should not affect the result ***much***
+
+### Model TBA
+
+The model arch
+
+![Model Arch](https://github.com/truekendor/chessboard-image-to-fen/blob/main/assets/model_arch.webp)
