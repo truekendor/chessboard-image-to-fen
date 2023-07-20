@@ -1,4 +1,4 @@
-# chessboard-image-to-fen
+# chessboard image to FEN online converter
 
 Chessboard image to FEN convertation using [TensorFlow.js](https://www.tensorflow.org/js), [MobileNet v3](https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v3_small_100_224/feature_vector/5/default/1) and transfer learning
 
