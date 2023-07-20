@@ -24,13 +24,13 @@ Alternatively, select the image in the file input at the top of the page
 
 ### Important 
 
-The chessboard image must be cropped around the edges of the chessboard
-
-in order for conversion to work
+In order for conversion to work the chessboard image must be cropped around the edges of the board
 
 Small image cropping offsets should not affect the result ***much***
 
-### Model TBA
+### Model
+
+TBA
 
 The model arch
 
