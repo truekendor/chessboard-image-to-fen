@@ -30,12 +30,13 @@ in order for conversion to work
 
 Small image cropping offsets should not affect the result ***much***
 
-### Model
+### Model TBA
 
 The model arch
 
 ![Model Arch](https://github.com/truekendor/chessboard-image-to-fen/blob/main/assets/model_arch.webp)
 
+TBA
 
 
 
