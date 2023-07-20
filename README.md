@@ -35,12 +35,3 @@ Small image cropping offsets should not affect the result ***much***
 The model arch
 
 ![Model Arch](https://github.com/truekendor/chessboard-image-to-fen/blob/main/assets/model_arch.webp)
-
-TBA
-
-
-
-
-
-
-
