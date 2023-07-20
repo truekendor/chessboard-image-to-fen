@@ -31,9 +31,8 @@ body {
   --backdrop-color: rgba(0, 0, 0, 0.35);
   --link-bg-color: hsl(48, 12%, 14%);
 
-  --color-links: hsl(28, 89%, 65%);
-  --color-links: 28, 89%, 65%;
-  /* --color-links: 28, 100%, 60%; */
+  --font-color-links: hsl(28, 89%, 65%);
+  --font-color-links: 28, 89%, 65%;
 
   --switch-btn-color: hsl(40, 4%, 15%);
 
@@ -66,7 +65,7 @@ body.light {
   --backdrop-color: rgba(0, 0, 0, 0.55);
   /* ! CHANGE ME */
   --link-bg-color: hsl(48, 12%, 14%);
-  --color-links: 28, 100%, 60%;
+  --font-color-links: 28, 100%, 60%;
 }
 
 body.brown {
@@ -78,8 +77,8 @@ body.brown {
   --backdrop-color: rgba(0, 0, 0, 0.55);
   --link-bg-color: hsl(48, 100%, 99%);
 
-  --color-links: hsl(20, 6%, 9%);
-  --color-links: 20, 6%, 9%;
+  --font-color-links: hsl(20, 6%, 9%);
+  --font-color-links: 20, 6%, 9%;
 }
 
 /* 
@@ -192,42 +191,6 @@ main area
   isolation: isolate;
 
   background-color: var(--body-bg-color);
-
-  /* 
-  background-color: #151516;
-opacity: 1;
-background: radial-gradient(circle, transparent 20%, #151516 20%, #151516 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, #151516 20%, #151516 80%, transparent 80%, transparent) 82.5px 82.5px, linear-gradient(#8a8a8a 6.6000000000000005px, transparent 6.6000000000000005px) 0 -3.3000000000000003px, linear-gradient(90deg, #8a8a8a 6.6000000000000005px, #151516 6.6000000000000005px) -3.3000000000000003px 0;
-background-size: 165px 165px, 165px 165px, 82.5px 82.5px, 82.5px 82.5px; */
-
-  /* opacity: 1;
-  background: radial-gradient(
-      circle,
-      transparent 20%,
-      var(--body-bg-color) 20%,
-      var(--body-bg-color) 80%,
-      transparent 80%,
-      transparent
-    ),
-    radial-gradient(
-        circle,
-        transparent 20%,
-        var(--body-bg-color) 20%,
-        var(--body-bg-color) 80%,
-        transparent 80%,
-        transparent
-      )
-      47.5px 47.5px,
-    linear-gradient(
-        #8a8a8a 3.8000000000000003px,
-        transparent 3.8000000000000003px
-      )
-      0 -1.9000000000000001px,
-    linear-gradient(
-        90deg,
-        #8a8a8a 3.8000000000000003px,
-        var(--body-bg-color) 3.8000000000000003px
-      ) -1.9000000000000001px 0;
-  background-size: 95px 95px, 95px 95px, 47.5px 47.5px, 47.5px 47.5px; */
 }
 
 .panel {
@@ -470,7 +433,7 @@ bottom panel / footer
 
   font-family: monospace;
 
-  color: hsl(var(--color-links));
+  color: hsl(var(--font-color-links));
   font-weight: 600;
   font-size: 1.2rem;
   line-height: 1.1;

@@ -113,7 +113,7 @@ function calculateFeaturesOnCurrentTile(canvasRef, mobilenet) {
   }
 }
 
-// Predict and do some other bullshit, actually
+// Predict and do some other bullshit
 function predict() {
   try {
     grid.classList.add("hidden");
@@ -226,14 +226,12 @@ function savePredictedImages(fen, reversedFen) {
 // * =================
 // * EVENT LISTENERS
 
-addEventListener("paste", async (e) => {
+window.addEventListener("paste", async (e) => {
   if (e.clipboardData.files.length === 0) return;
   await handleFileFromEvent(e.clipboardData.files[0]);
 });
 
-// * =================
-// * drag listeners
-addEventListener("drop", async (e) => {
+window.addEventListener("drop", async (e) => {
   e.preventDefault();
 
   if (e.dataTransfer.files.length === 0) return false;
@@ -245,18 +243,18 @@ addEventListener("drop", async (e) => {
   canvasContainer.classList.remove("pointer-none");
 });
 
-addEventListener("dragover", () => {
+window.addEventListener("dragover", () => {
   mainContainer.classList.add("drag-over");
 
   panel.classList.add("pointer-none");
   canvasContainer.classList.add("pointer-none");
 });
 
-addEventListener("dragleave", () => {
+window.addEventListener("dragleave", () => {
   mainContainer.classList.remove("drag-over");
 });
 
-addEventListener("dragover", (e) => {
+window.addEventListener("dragover", (e) => {
   e.preventDefault();
 });
 
