@@ -1,4 +1,4 @@
-# chessboard-image-to-fen
+# chessboard image to FEN online converter
 
 Chessboard image to FEN convertation using [TensorFlow.js](https://www.tensorflow.org/js), [MobileNet v3](https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v3_small_100_224/feature_vector/5/default/1) and transfer learning
 
@@ -24,13 +24,13 @@ Alternatively, select the image in the file input at the top of the page
 
 ### Important 
 
-The chessboard image must be cropped around the edges of the chessboard
-
-in order for conversion to work
+In order for conversion to work the chessboard image must be cropped around the edges of the board
 
 Small image cropping offsets should not affect the result ***much***
 
-### Model TBA
+### Model
+
+TBA
 
 The model arch
 
