@@ -125,18 +125,11 @@ function getBoardCandidates(rects, imgDims) {
   });
 }
 
-function selectOne(rects) {
-  //
-}
-
 async function convertFile(file) {
   const dims = await drawFileOnCanvas(file, canvas);
   infoDiv.classList.add("hidden");
 
-  // const rects = CV_Helper.getBoardContours(canvas);
-  // const filtered = getBoardCandidates(rects, dims);
-
-  const filtered = await filterDilate({
+  const filtered = await filterData({
     canvas,
     dims,
     restore: async () => {
@@ -154,8 +147,6 @@ async function convertFile(file) {
 
   const { x, y, width, height } = filtered[0];
 
-  console.log(filtered);
-
   const imageData = c.getImageData(x, y, width, height);
 
   canvas.width = width;
@@ -166,21 +157,21 @@ async function convertFile(file) {
   return false;
 }
 
-async function filterDilate({ canvas, dims, restore }) {
-  CV_Helper.imageDilate(canvas);
+async function filterData({ canvas, dims, restore }) {
+  CV_Helper.imageErode(canvas);
 
   const filtered = evaluateCanvasWithCV({ canvas, dims });
   if (filtered.length === 0) {
     await restore();
 
-    return filterErode({ canvas, dims, restore });
+    return filterDilate({ canvas, dims, restore });
   }
 
   return filtered;
 }
 
-async function filterErode({ canvas, dims, restore }) {
-  CV_Helper.imageErode(canvas);
+async function filterDilate({ canvas, dims, restore }) {
+  CV_Helper.imageDilate(canvas);
 
   const filtered = evaluateCanvasWithCV({ canvas, dims, restore });
   if (filtered.length === 0) {
