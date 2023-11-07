@@ -1,6 +1,6 @@
 /**
  * @param {array}
- * Array with piece types as values
+ * Array with piece type as a value
  * ['q', '5', 'N', ...]
  * @returns [string, string]
  */
@@ -52,13 +52,8 @@ export function isNumber(value) {
 
 /**
  * @param {string}
- * parses FEN string to be exactly 71 chars long
- * by parsing each number to be series of '1'
- * and joining it with '/'
- *
  * '3R3p' -> '111R111p'
- *
- * @returns {string.split('')}
+ * @returns {string[]}
  */
 export function normalizeFenString(fen) {
   let nFen = fen.split("").filter((el) => el !== "/");
@@ -89,12 +84,12 @@ export function normalizeFenString(fen) {
   return answer;
 }
 
-export async function drawFileOnCanvas(file, canvas) {
+export async function drawFileOnCanvas(image, canvas) {
   const img = new Image();
   const fileReader = new FileReader();
   const c = canvas.getContext("2d");
 
-  fileReader.readAsDataURL(file);
+  fileReader.readAsDataURL(image);
 
   return new Promise((res, rej) => {
     fileReader.onload = () => {
@@ -107,7 +102,10 @@ export async function drawFileOnCanvas(file, canvas) {
         c.filter = "grayscale(1)";
         c.drawImage(img, 0, 0);
 
-        res();
+        res({
+          width: img.naturalWidth,
+          height: img.naturalHeight,
+        });
       };
 
       img.onerror = (err) => rej(err);

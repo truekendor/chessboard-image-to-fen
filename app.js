@@ -1,5 +1,3 @@
-"use strict";
-
 import {
   normalizeFenString,
   parseFenFromArray,
@@ -10,6 +8,7 @@ import { ChessBoardCanvas } from "./pieceHelper.js";
 import { chessPiecesLookup } from "./pieceData.js";
 import { appendLoader, removeLoader } from "./loaderCanvas.js";
 import { createCopyButtons, createLichessLink } from "./creationHelper.js";
+import { CV_Helper } from "./cvHelper.js";
 
 const fileInput = document.querySelector("#image-input");
 
@@ -24,14 +23,16 @@ const buttonWhite = panel.querySelector(".switch");
 // container with Paste/Drop text
 const infoDiv = document.querySelector(".info-div");
 
-// bottom container with links to
-// lichess / chesscon
+// bottom container with links to lichess
 const linkContainer = document.querySelector(".links");
 
 const canvas = document.querySelector(".main-canvas");
 const c = canvas.getContext("2d", {
   willReadFrequently: true,
 });
+
+const previewCanvas = document.getElementById("preview-canvas");
+const prevCtx = previewCanvas.getContext("2d");
 
 const helperCanvas = document.querySelector(".helper-canvas");
 const ctx = helperCanvas.getContext("2d");
@@ -47,8 +48,23 @@ const grid = document.querySelector(".chessboard");
 const URL = `https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v3_small_100_224/feature_vector/5/default/1`;
 const MOBILE_NET_INPUT_WIDTH = 224;
 
-const mobilenet = await loadMobilenetModel();
-const model = await tf.loadLayersModel("./model/model.json");
+let mobilenet = null;
+let model = null;
+
+await Promise.all([
+  await loadMobilenetModel(),
+  await tf.loadLayersModel("./model/model.json"),
+])
+  .then((result) => {
+    mobilenet = result[0];
+    model = result[1];
+  })
+  .finally(() => {
+    removeLoader();
+  });
+
+// const mobilenet = await loadMobilenetModel();
+// const model = await tf.loadLayersModel("./model/model.json");
 
 infoDiv.classList.remove("hidden");
 
@@ -59,11 +75,13 @@ const fenImageData = {
 
 async function loadMobilenetModel() {
   try {
+    // todo fix this
     appendLoader();
 
     const mobilenet = await tf.loadGraphModel(URL, {
       fromTFHub: true,
     });
+
     // const mobilenet = await tf.loadGraphModel("./mobilenet", {
     //   fromTFHub: true,
     // });
@@ -78,17 +96,81 @@ async function loadMobilenetModel() {
     return mobilenet;
   } catch (e) {
     console.log(e?.message);
-  } finally {
-    removeLoader();
   }
 }
 
-async function handleFileFromEvent(file) {
-  await drawFileOnCanvas(file, canvas);
-  predict();
+/**
+ * filters contours array with arbitrary heuristics
+ */
+function getBoardCandidates(rects, imgDims) {
+  const area = imgDims.width * imgDims.height;
+  const imgAspectRatio = imgDims.width / imgDims.height;
+  const imgSimilarToSquare = imgAspectRatio < 1.15 && imgAspectRatio > 0.85;
 
+  return rects.filter((rect) => {
+    const contourArea = rect.width * rect.height;
+
+    // area is too small
+    if (area / contourArea > 20) return;
+    // not rect. similar
+    if (rect.aspectRatio > 1.1 || rect.aspectRatio < 0.9) return;
+    // absolute contour size is too small
+    if (rect.width < 100 || rect.height < 100) return;
+    // relative contour size is too small
+    if (rect.width < imgDims.width / 8 || rect.height < imgDims.height / 8)
+      return;
+
+    if (imgSimilarToSquare && contourArea < 0.7) {
+      return { x: 0, y: 0, width: imgDims.width, height: imgDims.height };
+    }
+
+    return rect;
+  });
+}
+
+async function convertFile(file) {
+  const dims = await drawFileOnCanvas(file, canvas);
   infoDiv.classList.add("hidden");
+
+  const rects = CV_Helper.getBoardContours(canvas);
+  const filtered = getBoardCandidates(rects, dims);
+
+  await drawFileOnCanvas(file, canvas);
+
+  if (filtered.length === 0) {
+    // todo inform the user
+
+    return;
+  }
+
+  const { x, y, width, height } = filtered[0];
+  const imageData = c.getImageData(x, y, width, height);
+
+  canvas.width = width;
+  canvas.height = height;
+  c.putImageData(imageData, 0, 0);
+
+  predict(canvas);
   return false;
+}
+
+function drawBoardOutline(boardCandidates, canvas) {
+  console.log("BOARD COORDS!!");
+  console.log("BOARD COORDS!!");
+  console.log("BOARD COORDS!!", boardCandidates);
+
+  const c = canvas.getContext("2d");
+  c.filter = "grayscale(0)";
+
+  const { x, y, width, height } = boardCandidates;
+
+  c.strokeStyle = "red";
+  c.lineWidth = 2;
+
+  c.beginPath();
+  c.rect(x, y, width, height);
+  c.stroke();
+  c.closePath();
 }
 
 function calculateFeaturesOnCurrentTile(canvasRef, mobilenet) {
@@ -114,7 +196,7 @@ function calculateFeaturesOnCurrentTile(canvasRef, mobilenet) {
 }
 
 // Predict and do some other bullshit
-function predict() {
+function predict(canvas) {
   try {
     grid.classList.add("hidden");
 
@@ -206,36 +288,37 @@ function predict() {
 
 function savePredictedImages(fen, reversedFen) {
   const board = new ChessBoardCanvas(helperCanvas.width);
-
   // save predicted fen images
   board.clearBoard();
   board.drawChessboardFromFen(
     normalizeFenString(fen).filter((el) => el !== "/")
   );
   fenImageData.white = board.imageData;
-
   board.clearBoard();
   board.drawChessboardFromFen(
     normalizeFenString(reversedFen).filter((el) => el !== "/")
   );
-
   fenImageData.black = board.imageData;
 }
 
 // * =================
 // * =================
 // * EVENT LISTENERS
+fileInput.addEventListener("change", async () => {
+  if (fileInput.files.length === 0) return;
+  await convertFile(fileInput.files[0]);
+});
 
 window.addEventListener("paste", async (e) => {
   if (e.clipboardData.files.length === 0) return;
-  await handleFileFromEvent(e.clipboardData.files[0]);
+  await convertFile(e.clipboardData.files[0]);
 });
 
 window.addEventListener("drop", async (e) => {
   e.preventDefault();
 
   if (e.dataTransfer.files.length === 0) return false;
-  await handleFileFromEvent(e.dataTransfer.files[0]);
+  await convertFile(e.dataTransfer.files[0]);
 
   mainContainer.classList.remove("drag-over");
 
@@ -264,14 +347,9 @@ buttonWhite.addEventListener("pointerdown", () => {
   if (!fenImageData.white) return;
   ctx.putImageData(fenImageData.white, 0, 0);
 
-  helperCanvas.classList.add("top");
+  helperCanvas.classList.add("z-index-high");
 });
 
 buttonWhite.addEventListener("pointerup", () => {
-  helperCanvas.classList.remove("top");
-});
-
-fileInput.addEventListener("change", async (e) => {
-  if (fileInput.files.length === 0) return;
-  await handleFileFromEvent(fileInput.files[0]);
+  helperCanvas.classList.remove("z-index-high");
 });

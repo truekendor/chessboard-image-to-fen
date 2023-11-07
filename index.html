@@ -12,10 +12,23 @@
 
     <link rel="stylesheet" href="styles.css" />
 
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
-    <script src="app.js" defer type="module"></script>
+    <script
+      id="opencv-script"
+      src="https://docs.opencv.org/master/opencv.js"
+    ></script>
+
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"
+    ></script>
+    <script defer src="app.js" type="module"></script>
   </head>
   <body>
+    <div id="preview-container" class="hidden">
+      <button>x</button>
+      <canvas id="preview-canvas"></canvas>
+      <button>ok</button>
+    </div>
     <header class="header">
       <div class="label-wrapper">
         <h3>Chessboard image to FEN</h3>
@@ -25,12 +38,12 @@
         </label>
       </div>
     </header>
-    <div class="main-container">
+    <div class="main-container" id="dev">
       <div class="panel">
         <button class="switch">Preview prediction</button>
       </div>
       <div class="canvas-container">
-        <canvas class="main-canvas"></canvas>
+        <canvas class="main-canvas" width="600" height="600"></canvas>
         <canvas class="helper-canvas"></canvas>
         <div class="chessboard">
           <div class="tile"></div>
@@ -100,7 +113,7 @@
         </div>
       </div>
 
-      <div class="info-div hidden">Paste or Drop image here</div>
+      <div class="info-div">Paste or Drop image here</div>
     </div>
 
     <div class="links"></div>
