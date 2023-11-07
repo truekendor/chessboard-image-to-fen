@@ -63,9 +63,6 @@ await Promise.all([
     removeLoader();
   });
 
-// const mobilenet = await loadMobilenetModel();
-// const model = await tf.loadLayersModel("./model/model.json");
-
 infoDiv.classList.remove("hidden");
 
 const fenImageData = {
@@ -128,22 +125,37 @@ function getBoardCandidates(rects, imgDims) {
   });
 }
 
+function selectOne(rects) {
+  //
+}
+
 async function convertFile(file) {
   const dims = await drawFileOnCanvas(file, canvas);
   infoDiv.classList.add("hidden");
 
-  const rects = CV_Helper.getBoardContours(canvas);
-  const filtered = getBoardCandidates(rects, dims);
+  // const rects = CV_Helper.getBoardContours(canvas);
+  // const filtered = getBoardCandidates(rects, dims);
+
+  const filtered = await filterDilate({
+    canvas,
+    dims,
+    restore: async () => {
+      await drawFileOnCanvas(file, canvas);
+    },
+  });
 
   await drawFileOnCanvas(file, canvas);
 
   if (filtered.length === 0) {
-    // todo inform the user
+    window.alert("ERROR: failed to recognize the board");
 
     return;
   }
 
   const { x, y, width, height } = filtered[0];
+
+  console.log(filtered);
+
   const imageData = c.getImageData(x, y, width, height);
 
   canvas.width = width;
@@ -154,23 +166,37 @@ async function convertFile(file) {
   return false;
 }
 
-function drawBoardOutline(boardCandidates, canvas) {
-  console.log("BOARD COORDS!!");
-  console.log("BOARD COORDS!!");
-  console.log("BOARD COORDS!!", boardCandidates);
+async function filterDilate({ canvas, dims, restore }) {
+  CV_Helper.imageDilate(canvas);
 
-  const c = canvas.getContext("2d");
-  c.filter = "grayscale(0)";
+  const filtered = evaluateCanvasWithCV({ canvas, dims });
+  if (filtered.length === 0) {
+    await restore();
 
-  const { x, y, width, height } = boardCandidates;
+    return filterErode({ canvas, dims, restore });
+  }
 
-  c.strokeStyle = "red";
-  c.lineWidth = 2;
+  return filtered;
+}
 
-  c.beginPath();
-  c.rect(x, y, width, height);
-  c.stroke();
-  c.closePath();
+async function filterErode({ canvas, dims, restore }) {
+  CV_Helper.imageErode(canvas);
+
+  const filtered = evaluateCanvasWithCV({ canvas, dims, restore });
+  if (filtered.length === 0) {
+    await restore();
+
+    return evaluateCanvasWithCV({ canvas, dims, restore });
+  }
+
+  return filtered;
+}
+
+function evaluateCanvasWithCV({ canvas, dims }) {
+  const rects = CV_Helper.getBoardContours(canvas);
+  const filtered = getBoardCandidates(rects, dims);
+
+  return filtered;
 }
 
 function calculateFeaturesOnCurrentTile(canvasRef, mobilenet) {

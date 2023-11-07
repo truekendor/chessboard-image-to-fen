@@ -169,4 +169,46 @@ export class CV_Helper {
     dst.delete();
     lines.delete();
   }
+
+  static imageErode(canvas) {
+    const src = cv.imread(canvas);
+    const dst = new cv.Mat();
+    const M = cv.Mat.ones(5, 5, cv.CV_8U);
+    const anchor = new cv.Point(-1, -1);
+    // You can try more different parameters
+    cv.erode(
+      src,
+      dst,
+      M,
+      anchor,
+      1,
+      cv.BORDER_CONSTANT,
+      cv.morphologyDefaultBorderValue()
+    );
+    cv.imshow(canvas, dst);
+    src.delete();
+    dst.delete();
+    M.delete();
+  }
+
+  static imageDilate(canvas) {
+    let src = cv.imread(canvas);
+    let dst = new cv.Mat();
+    let M = cv.Mat.ones(5, 5, cv.CV_8U);
+    let anchor = new cv.Point(-1, -1);
+    // You can try more different parameters
+    cv.dilate(
+      src,
+      dst,
+      M,
+      anchor,
+      1,
+      cv.BORDER_CONSTANT,
+      cv.morphologyDefaultBorderValue()
+    );
+    cv.imshow(canvas, dst);
+    src.delete();
+    dst.delete();
+    M.delete();
+  }
 }
