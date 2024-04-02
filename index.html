@@ -2,120 +2,144 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/icon.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <meta name="theme-color" content="#1f1d1a" />
-    <meta name="color-scheme" content="dark" />
-
-    <link rel="icon" type="image/x-icon" href="assets/icon.jpg" />
-    <title>Chessboard image to FEN</title>
-
-    <link rel="stylesheet" href="styles.css" />
-
-    <script
-      id="opencv-script"
-      src="https://docs.opencv.org/master/opencv.js"
-    ></script>
-
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"
-    ></script>
-    <script defer src="app.js" type="module"></script>
+    <title>Chess Board converter</title>
   </head>
-  <body>
-    <div id="preview-container" class="hidden">
-      <button>x</button>
-      <canvas id="preview-canvas"></canvas>
-      <button>ok</button>
-    </div>
-    <header class="header">
-      <div class="label-wrapper">
-        <h3>Chessboard image to FEN</h3>
-        <label class="image-input-label" for="image-input" aria-label="input">
-          <input type="file" id="image-input" type="file" accept="image/*" />
-          <p>Choose file here</p>
-        </label>
+  <body class="light">
+    <div id="app">
+      <div class="loader">
+        <h3>Loading models...</h3>
+        <svg
+          fill="none"
+          class="circle-svg"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle class="circle" cx="50" cy="50" r="45" />
+        </svg>
       </div>
-    </header>
-    <div class="main-container" id="dev">
-      <div class="panel">
-        <button class="switch">Preview prediction</button>
+  
+
+      <header class="header">
+          <h3>Chessboard image to FEN</h3>
+          <label class="image-input-label" for="image-input" aria-label="input">
+            <input type="file" id="image-input" type="file" accept="image/*" />
+            <p>Choose file here</p>
+          </label>
+      
+      </header>
+
+      <div class="outline-svg_container">
+        <svg class="rects-svg"></svg>
       </div>
-      <div class="canvas-container">
-        <canvas class="main-canvas" width="600" height="600"></canvas>
-        <canvas class="helper-canvas"></canvas>
-        <div class="chessboard">
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
-          <div class="tile"></div>
+
+      <main class="main-container" id="dev">
+
+        <section class="canvas-container">
+
+          <canvas class="main-canvas" width="600" height="600"></canvas>
+          <div class="chessboard">
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+            <div class="tile"></div>
+          </div>
+        </section>
+  
+        <div class="paste-drop-tooltip">
+          <p>Paste or Drop image here</p>
+          <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+          <svg
+            class="insert-object"
+            width="60px"
+            height="60px"
+            viewBox="0 0 16 16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g>
+              <path
+                d="m 5 12 v 1 h 0.007812 c -0.003906 0.265625 0.101563 0.519531 0.285157 0.707031 l 2 2 c 0.390625 0.390625 1.023437 0.390625 1.414062 0 l 2 -2 c 0.183594 -0.1875 0.289063 -0.441406 0.289063 -0.707031 h 0.003906 v -1 z m 0 0"
+              />
+              <path
+                d="m 8 -0.0078125 l -5 3.1406245 v 4.714844 l 5 3.144532 l 5 -3.144532 v -4.714844 z m 0 6.0000005 l -3.644531 -2.175782 l 3.644531 -2.292968 l 3.644531 2.292968 z m 0 0"
+              />
+            </g>
+          </svg>
         </div>
+      </main>
+  
+      <div class="results">
+        <div class="links"></div>
       </div>
 
-      <div class="info-div">Paste or Drop image here</div>
-    </div>
-
-    <div class="links"></div>
+      <canvas 
+        width="400"
+        height="400"
+      class="border-canvas">
+      </canvas>
+      
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
