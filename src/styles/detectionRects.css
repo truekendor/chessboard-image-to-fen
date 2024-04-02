@@ -1,6 +1,5 @@
 .outline-svg_container {
   position: fixed;
-  /* background-color: rgba(196, 239, 190, 0.305); */
   inset: 0;
 
   width: 100vw;
@@ -22,43 +21,33 @@
   isolation: isolate;
 }
 
-/* todo */
-.detection_group {
-  z-index: -1;
-}
-
-.detection_group > circle {
+g.detection_group > circle {
   fill: transparent;
+
+  z-index: 3;
 }
 
-.detection_group > rect {
-  z-index: -1;
+g.detection_group > rect {
   fill: #e43333;
   fill-opacity: 0.3;
 
   stroke-width: 2;
   stroke: #ff2853;
-}
 
-.detection_group:hover {
   z-index: 2;
 }
 
-.detection_group:hover > rect {
-  z-index: 3;
-}
-
-.detection_group:hover > circle,
-.detection_group.group-active > circle {
+g.detection_group:hover > circle,
+g.detection_group.group-active > circle {
   fill: #ff2853;
   stroke: #ff2853;
 
   z-index: 3;
-  r: 7;
+  r: 5.5;
   stroke-width: 2.5;
 }
 
-.detection_group > circle:hover {
+g.detection_group > circle:hover {
   fill: black;
 }
 
@@ -93,6 +82,8 @@
 /* todo delete?  */
 
 canvas.border-canvas {
+  display: none;
+
   position: fixed;
   left: 0;
   bottom: 0;

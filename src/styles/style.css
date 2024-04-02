@@ -22,7 +22,7 @@ body,
 
   position: relative;
 
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 :root {
@@ -53,7 +53,9 @@ body,
   --canvas-width: min(1200px, 95%);
   --chessboard-placeholder-width: min(600px, 95%);
 
-  --paste-or-drop-color: rgb(194, 191, 184);
+  --paste-drop-color: rgb(194, 191, 184);
+
+  --header-height: 50px;
 }
 
 /* 
@@ -86,7 +88,7 @@ body.light {
   /* --dark-tile: #ceb1be; */
   --dark-tile: #c7bcc0;
 
-  --paste-or-drop-color: #2d2d34;
+  --paste-drop-color: #2d2d34;
 }
 
 /* 
@@ -104,6 +106,7 @@ header
   flex-shrink: 0;
 
   width: 100%;
+  height: var(--header-height);
 
   padding: 0.4rem;
 
@@ -168,14 +171,13 @@ main area
 ----------------
 */
 
-/* ! */
 .main-container {
   display: flex;
   justify-content: center;
   align-items: center;
 
   width: 100%;
-  height: 100%;
+  height: calc(100% - var(--header-height));
 
   flex-direction: column;
 
@@ -207,21 +209,19 @@ canvases
 .canvas-container {
   position: relative;
   display: flex;
+
   justify-content: center;
+  align-items: center;
 
   width: 100%;
+  height: 100%;
 
   isolation: isolate;
-  /* overflow: hidden; */
-
-  margin-block-end: 0.5rem;
 }
 
 .canvas-container.active > .main-canvas {
   max-width: 96%;
-  max-height: 85%;
-  /* width: 100%; */
-  /* max-width: var(--canvas-width); */
+  max-height: 92%;
 
   border-radius: 5px;
 }
@@ -247,9 +247,7 @@ Paste/Drop hint div
   justify-content: center;
   align-items: center;
 
-  padding: 1rem;
-
-  color: var(--paste-or-drop-color);
+  color: var(--paste-drop-color);
 
   pointer-events: none;
 

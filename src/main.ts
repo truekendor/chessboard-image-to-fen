@@ -1,8 +1,8 @@
 import "./styles/style.css";
 import "./styles/chessboard.css";
 import "./styles/loader.css";
-import "./styles/rects.css";
-import "./styles/detectionResults.css";
+import "./styles/detectionRects.css";
+import "./styles/detectionsSidebar.css";
 
 import { NN } from "./nnHelper.js";
 
@@ -15,12 +15,6 @@ const canvasContainer: HTMLSelectElement =
 const canvas: HTMLCanvasElement = document.querySelector(".main-canvas")!;
 canvas.width = 600;
 canvas.height = 600;
-
-// bottom container with links to lichess
-// const linkContainer: HTMLDivElement = document.querySelector(".links")!;
-
-// const rectsContainer: HTMLDivElement = document.querySelector(".outline-svg_container")!;
-// const rectsSVG = rectsContainer.querySelector("svg")!;
 
 NN.loadModels();
 
@@ -71,7 +65,9 @@ async function convertFileAndPredict(file: Blob) {
   );
 
   setTimeout(() => {
-    NN.classification.classifyDetectionResults(canvas, detectionResult);
+    // todo delete
+    detectionResult;
+    // NN.classification.classifyDetectionResults(canvas, detectionResult);
   });
 
   return;

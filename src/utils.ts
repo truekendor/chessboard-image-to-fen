@@ -39,8 +39,13 @@ export function parseFenFromArray(
 }
 
 function isNumber(value: unknown): boolean {
-  // @ts-ignore
-  return typeof parseInt(value) === "number" && !isNaN(parseInt(value));
+  if (typeof value !== "string" && typeof value !== "number") {
+    return false;
+  }
+
+  return (
+    typeof parseInt(`${value}`) === "number" && !isNaN(parseInt(`${value}`))
+  );
 }
 
 export function normalizeFenString(fen: string): string[] {

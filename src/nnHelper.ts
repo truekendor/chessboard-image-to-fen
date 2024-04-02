@@ -126,7 +126,7 @@ class DetectionHelper {
 
     const boxes_data = boxes.gather(nms, 0).dataSync() as Float32Array; // indexing boxes by nms index
     const scores_data = scores.gather(nms, 0).dataSync() as Float32Array; // indexing scores by nms index
-    const classes_data = classes.gather(nms, 0).dataSync() as Int32Array; // indexing classes by nms index
+    // const classes_data = classes.gather(nms, 0).dataSync() as Int32Array; // indexing classes by nms index
 
     tf.dispose([res, transRes, boxes, scores, classes, nms]); // clear memory
 
@@ -136,7 +136,7 @@ class DetectionHelper {
       canvasRef,
       boxes_data,
       scores_data,
-      classes_data,
+      // classes_data,
       [xRatio, yRatio]
     );
 
@@ -204,6 +204,55 @@ class ClassificationHelper {
     this.chessPiecesLookup
   ) as (keyof typeof this.chessPiecesLookup)[];
 
+  // todo delete
+  static __dev_classifyRes(
+    result: Awaited<
+      ReturnType<typeof DetectionHelper.detectChessboards>
+    >[number]
+  ) {
+    const resultsDiv = document.querySelector(".detection-sidebar")!;
+
+    const tileCanvas = document.createElement("canvas");
+
+    tf.tidy(() => {
+      const { canvas: boardCanvas } = result;
+
+      resultsDiv.append(boardCanvas);
+
+      const tileFeatures = this.extractTileFeatures(boardCanvas, tileCanvas);
+      const fenArray = this.classifyTiles(tileFeatures);
+
+      const [parsedFen, reversedFen] = parseFenFromArray(fenArray);
+      // todo delete
+      reversedFen;
+
+      // todo uncomment after improvement
+      // saves predicted images to fenImageData object
+      // savePredictedImages(parsedFen, reversedFen);
+
+      const wrapperOne = document.createElement("div");
+      const wrapperTwo = document.createElement("div");
+      wrapperOne.classList.add("link-wrapper");
+      wrapperTwo.classList.add("link-wrapper");
+
+      // todo delete
+      // const [linkLichess, linkLichessReversed] = createLichessLink(
+      //   parsedFen,
+      //   reversedFen
+      // );
+      // const [copyWhite, copyBlack] = createCopyButtons(parsedFen, reversedFen);
+
+      // wrapperOne.append(linkLichess, copyWhite);
+      // wrapperTwo.append(linkLichessReversed, copyBlack);
+
+      console.log(`fen: ${parsedFen}`);
+
+      // to get rid of children nodes
+      linkContainer.innerHTML = "";
+
+      linkContainer.append(wrapperOne, wrapperTwo);
+    });
+  }
   static classifyDetectionResults(
     canvas: HTMLCanvasElement,
     results: Awaited<ReturnType<typeof DetectionHelper.detectChessboards>>
@@ -212,7 +261,7 @@ class ClassificationHelper {
       willReadFrequently: true,
     })!;
 
-    const resultsDiv = document.querySelector(".results")!;
+    const resultsDiv = document.querySelector(".detection-sidebar")!;
 
     const tileCanvas = document.createElement("canvas");
 
@@ -249,10 +298,10 @@ class ClassificationHelper {
         // saves predicted images to fenImageData object
         // savePredictedImages(parsedFen, reversedFen);
 
-        const wrapperOne = document.createElement("div");
-        const wrapperTwo = document.createElement("div");
-        wrapperOne.classList.add("link-wrapper");
-        wrapperTwo.classList.add("link-wrapper");
+        // const wrapperOne = document.createElement("div");
+        // const wrapperTwo = document.createElement("div");
+        // wrapperOne.classList.add("link-wrapper");
+        // wrapperTwo.classList.add("link-wrapper");
 
         // todo delete
         // const [linkLichess, linkLichessReversed] = createLichessLink(
@@ -266,10 +315,10 @@ class ClassificationHelper {
 
         console.log(`fen: ${parsedFen}`);
 
-        // to get rid of children nodes
-        linkContainer.innerHTML = "";
+        // to get rid of child nodes
+        // linkContainer.innerHTML = "";
 
-        linkContainer.append(wrapperOne, wrapperTwo);
+        // linkContainer.append(wrapperOne, wrapperTwo);
       });
     });
   }

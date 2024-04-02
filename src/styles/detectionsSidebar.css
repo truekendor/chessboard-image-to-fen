@@ -1,0 +1,37 @@
+/* todo rename */
+.detection-sidebar {
+  position: absolute;
+  right: 0;
+  top: 100px;
+
+  width: 270px;
+  height: 700px;
+
+  z-index: 4000;
+
+  background-color: #217949;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  padding: 2px 4px;
+}
+
+.detection-sidebar > canvas {
+  width: 100%;
+
+  max-height: 300px;
+}
+
+.detection-sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.detection-sidebar::-webkit-scrollbar-track {
+  background: rgb(255, 253, 248); /* color of the tracking area */
+}
+
+.detection-sidebar::-webkit-scrollbar-thumb {
+  background-color: rgb(48, 48, 48); /* color of the scroll thumb */
+  border-radius: 20px; /* roundness of the scroll thumb */
+}

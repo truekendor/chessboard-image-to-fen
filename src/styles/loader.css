@@ -45,7 +45,7 @@
   stroke-width: var(--_stroke-width);
 
   animation: loader var(--_animation_duration) infinite,
-    spin_1 3000ms infinite linear;
+    spin 3000ms infinite linear;
 }
 
 @keyframes loader {
@@ -115,7 +115,7 @@
   }
 }
 
-@keyframes spin_1 {
+@keyframes spin {
   0% {
     transform: rotate(0deg);
   }
