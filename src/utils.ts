@@ -44,8 +44,8 @@ function isNumber(value: unknown): boolean {
 }
 
 export function normalizeFenString(fen: string): string[] {
-  let nFen = fen.split("").filter((el) => el !== "/");
-  let answer = [];
+  const nFen = fen.split("").filter((el) => el !== "/");
+  const answer: string[] = [];
   let fenLengthWithoutSlash = 0;
 
   for (let i = 0; i < nFen.length; i++) {

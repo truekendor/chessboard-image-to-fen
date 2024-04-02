@@ -57,18 +57,14 @@ class DetectionResult implements DetectionResultType {
   }
 }
 
-function createResizableRect({
+function createResizableSVGGroup({
   x1,
   y1,
-  x2,
-  y2,
   width,
   height,
 }: {
   x1: number;
   y1: number;
-  x2: number;
-  y2: number;
   width: number;
   height: number;
 }) {
@@ -168,7 +164,6 @@ export function renderSVGBoxes(
 
   for (let i = 0; i < scores_data.length; ++i) {
     // filter based on class threshold
-
     const score = scores_data[i] * 100; //.toFixed(1);
 
     const aspectRatio =
@@ -207,19 +202,17 @@ export function renderSVGBoxes(
     // todo rename vars
     const ratio = canvas.width / canvasStyleWidth;
     const cX1 = left + x1 / ratio;
-    const cX2 = left + x2 / ratio;
+    // const cX2 = left + x2 / ratio;
 
     const cY1 = top + y1 / ratio;
-    const cY2 = top + y2 / ratio;
+    // const cY2 = top + y2 / ratio;
 
     const cWidth = width / ratio;
     const cHeight = height / ratio;
 
-    const group = createResizableRect({
+    const group = createResizableSVGGroup({
       x1: cX1,
-      x2: cX2,
       y1: cY1,
-      y2: cY2,
       width: cWidth,
       height: cHeight,
     });
@@ -231,11 +224,11 @@ export function renderSVGBoxes(
         aspectRatio,
         width,
         height,
+        score,
         x1,
         x2,
         y1,
         y2,
-        score,
       })
     );
   }
@@ -303,7 +296,9 @@ function drawOutlinedArea({
       height
     );
     bC.putImageData(data, 0, 0);
-  } catch {}
+  } catch (e) {
+    console.log("err: ", e);
+  }
 }
 
 let circleIndex = 0;

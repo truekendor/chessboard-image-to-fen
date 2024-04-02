@@ -7,7 +7,7 @@ import { renderSVGBoxes } from "./renderBoxes.js";
 const linkContainer: HTMLDivElement = document.querySelector(".links")!;
 
 export class NN {
-  // const URL = `https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v3_small_100_224/feature_vector/5/default/1`;
+  // static URL = `https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v3_small_100_224/feature_vector/5/default/1`;
   static mobilenetInputWidth = 224 as const;
 
   static models: {
@@ -29,11 +29,7 @@ export class NN {
       // todo delete comments
       await Promise.all([
         tf.loadGraphModel("./nn/detection_model/model.json"),
-        // tf.loadGraphModel("./nn/best_web_model_v3/model.json"),
         tf.loadLayersModel("./nn/classification_model/model.json"),
-        // tf.loadGraphModel(URL, {
-        //   fromTFHub: true,
-        // }),
         tf.loadGraphModel("./nn/mobilenet/model.json"),
       ] as const);
 
@@ -258,6 +254,7 @@ class ClassificationHelper {
         wrapperOne.classList.add("link-wrapper");
         wrapperTwo.classList.add("link-wrapper");
 
+        // todo delete
         // const [linkLichess, linkLichessReversed] = createLichessLink(
         //   parsedFen,
         //   reversedFen
