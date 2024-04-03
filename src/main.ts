@@ -12,9 +12,22 @@ const mainContainer: HTMLDivElement =
 const canvasContainer: HTMLSelectElement =
   document.querySelector(".canvas-container")!;
 
-const canvas: HTMLCanvasElement = document.querySelector(".main-canvas")!;
-canvas.width = 600;
-canvas.height = 600;
+export class MainCanvas {
+  static canvas: HTMLCanvasElement = document.querySelector(".main-canvas")!;
+  static ctx: CanvasRenderingContext2D = this.canvas.getContext("2d", {
+    willReadFrequently: true,
+  })!;
+
+  static boundingRect = this.canvas.getBoundingClientRect();
+
+  static calcNewRect() {
+    this.boundingRect = this.canvas.getBoundingClientRect();
+  }
+
+  static get ratio() {
+    return this.canvas.width / this.boundingRect.width;
+  }
+}
 
 NN.loadModels();
 
@@ -23,7 +36,7 @@ const fileInput: HTMLInputElement = document.querySelector("#image-input")!;
 async function convertFileAndPredict(file: Blob) {
   const img = new Image();
   const fileReader = new FileReader();
-  const c = canvas.getContext("2d")!;
+  const c = MainCanvas.ctx;
 
   fileReader.readAsDataURL(file);
 
@@ -46,8 +59,8 @@ async function convertFileAndPredict(file: Blob) {
 
         canvasContainer.classList.add("active");
 
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
+        MainCanvas.canvas.width = img.naturalWidth;
+        MainCanvas.canvas.height = img.naturalHeight;
 
         c.drawImage(img, 0, 0);
 
@@ -58,10 +71,12 @@ async function convertFileAndPredict(file: Blob) {
     };
   });
 
+  MainCanvas.calcNewRect();
+
   const detectionResult = await NN.detection.detectChessboards(
     img,
     NN.models.detectionModel,
-    canvas
+    MainCanvas.canvas
   );
 
   setTimeout(() => {

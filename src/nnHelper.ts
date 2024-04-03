@@ -58,6 +58,13 @@ export class NN {
       mobilenetFeatureVector,
     ] as const;
   }
+
+  static memoryUsage() {
+    console.log(
+      `num tensors: ${tf.memory().numTensors}\n`,
+      `num bytes  : ${tf.memory().numBytes}`
+    );
+  }
 }
 
 class DetectionHelper {

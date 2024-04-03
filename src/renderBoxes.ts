@@ -1,23 +1,15 @@
 import { NN } from "./nnHelper";
+import { MainCanvas } from "./main";
 
 const rectsContainer: HTMLDivElement = document.querySelector(
   ".outline-svg_container"
 )!;
 const rectsSVG = rectsContainer.querySelector("svg")!;
 
-const mainCanvas: HTMLCanvasElement = document.querySelector(".main-canvas")!;
-
-const mainContext = mainCanvas.getContext("2d", {
-  willReadFrequently: true,
-})!;
-
-function incrementalId() {
+const getIncId = (function () {
   let id = 1;
-
   return () => id++;
-}
-
-const getIncId = incrementalId();
+})();
 
 type DetectionResultType = {
   score: number;
@@ -86,7 +78,7 @@ class DetectionResult implements DetectionResultType {
 
     this.ctx.filter = "grayscale(1)";
 
-    const mainCanvasData = mainContext.getImageData(
+    const mainCanvasData = MainCanvas.ctx.getImageData(
       this.x1,
       this.y1,
       this.width,
@@ -217,12 +209,8 @@ export function renderSVGBoxes(
 
     let [y1, x1, y2, x2] = boxes_data.slice(i * 4, (i + 1) * 4);
 
-    const {
-      left,
-      top,
-      width: canvasStyleWidth,
-      // height: browserHeight,
-    } = canvas.getBoundingClientRect();
+    const { left, top } = MainCanvas.boundingRect;
+    const ratio = MainCanvas.ratio;
 
     x1 = (x1 / 640) * canvas.width * ratios[0];
     x2 = (x2 / 640) * canvas.width * ratios[0];
@@ -235,8 +223,6 @@ export function renderSVGBoxes(
     // ! ===================
     // todo make rect pool; 50 rects should be more than enough
 
-    // todo rename vars
-    const ratio = canvas.width / canvasStyleWidth;
     const cX1 = left + x1 / ratio;
     // const cX2 = left + x2 / ratio;
 
@@ -245,6 +231,18 @@ export function renderSVGBoxes(
 
     const cWidth = width / ratio;
     const cHeight = height / ratio;
+
+    // const detection = new DetectionResult({
+    //   aspectRatio,
+    //   width,
+    //   height,
+    //   score,
+    //   x1,
+    //   x2,
+    //   y1,
+    //   y2,
+    //   mainContext,
+    // });
 
     const detection = new DetectionResult({
       aspectRatio,
@@ -255,7 +253,7 @@ export function renderSVGBoxes(
       x2,
       y1,
       y2,
-      mainContext: mainContext,
+      mainContext: MainCanvas.ctx,
     });
 
     resultsList.push(detection);
@@ -309,15 +307,12 @@ function drawOutlinedArea({
   styleHeight: number;
   canvas: HTMLCanvasElement;
 }) {
-  // todo pass browserWidth, left, top and context as params
-  // todo or move to class
-  const {
-    width: canvasStyleWidth,
-    left,
-    top,
-  } = mainCanvas.getBoundingClientRect();
+  // NN.memoryUsage();
 
-  const ratio = mainCanvas.width / canvasStyleWidth;
+  // const ratio = mainCanvas.width / canvasStyleWidth;
+  const ratio = MainCanvas.ratio;
+  const mainContext = MainCanvas.ctx;
+  const { left, top } = MainCanvas.boundingRect;
 
   const width = styleWidth * ratio;
   const height = styleHeight * ratio;
