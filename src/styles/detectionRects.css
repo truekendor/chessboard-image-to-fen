@@ -78,20 +78,3 @@ g.detection_group > circle:hover {
 .detection_group > circle:nth-of-type(8) {
   cursor: nw-resize;
 }
-
-/* todo delete?  */
-
-canvas.border-canvas {
-  display: none;
-
-  position: fixed;
-  left: 0;
-  bottom: 0;
-
-  background-color: lightgray;
-
-  min-width: 300px;
-
-  max-width: 400px;
-  max-height: 400px;
-}
