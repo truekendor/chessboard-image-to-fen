@@ -15,3 +15,7 @@ trained on a procedurally generated dataset
 ### Prediction head arch
 
 ![Model Arch](https://github.com/truekendor/chessboard-image-to-fen/blob/main/assets/model_arch.webp)
+
+
+# Acknowledgements
+- Detection output parsed with slightly modified version of the [onnx runtime web](https://github.com/Hyuto/yolov8-onnxruntime-web)
