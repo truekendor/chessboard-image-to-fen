@@ -1,6 +1,7 @@
-import { NN, appendCardToSidebar } from "./nnHelper";
+import { NN } from "./nnHelper";
 import { MainCanvas } from "./main";
 import { DetectionCanvas } from "./detection-canvas";
+import { createSidebarCard } from "./components/sidebarCard";
 
 const detectionsOutlineContainer: HTMLDivElement = document.querySelector(
   ".outline-svg_container"
@@ -178,7 +179,11 @@ export function renderSVGBoxes(
       const [regularFen, reversedFen] = NN.classification.classifyCanvas(
         detectionResult.canvas
       );
-      appendCardToSidebar(detectionResult, regularFen, reversedFen);
+      createSidebarCard(
+        detectionResult,
+        regularFen,
+        reversedFen
+      ).appendCardToSidebar();
     });
   }, 25);
 

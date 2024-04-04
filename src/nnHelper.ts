@@ -2,7 +2,6 @@ import * as tf from "@tensorflow/tfjs";
 import { parseFenFromArray } from "./utils";
 
 import { renderSVGBoxes } from "./renderBoxes.js";
-import { DetectionCanvas } from "./detection-canvas.js";
 
 export class NN {
   // static URL = `https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v3_small_100_224/feature_vector/5/default/1`;
@@ -329,80 +328,4 @@ class ClassificationHelper {
       return result;
     });
   }
-}
-
-function createSidebarCard(
-  detectionCanvas: DetectionCanvas,
-  fenWhite: string,
-  fenBlack: string
-) {
-  const cardWrapper = document.createElement("div");
-  cardWrapper.classList.add("detection-card");
-
-  // * ============
-  // * button panel
-
-  const previewPredictionBtn = document.createElement("button");
-  previewPredictionBtn.textContent = "preview";
-
-  const predictBtn = document.createElement("button");
-  predictBtn.textContent = "predict";
-
-  const buttonsPanel = document.createElement("div");
-  buttonsPanel.append(previewPredictionBtn, predictBtn);
-
-  predictBtn.addEventListener("click", () => {
-    const [f1, f2] = NN.classification.classifyCanvas(
-      detectionCanvas.toGrayScale().canvas
-    );
-
-    console.log("bruhhhh", f1, f2);
-  });
-
-  // * ============
-  // * fen
-
-  const fenContainer = document.createElement("div");
-  fenContainer.classList.add("fen-container");
-
-  const fenW = document.createElement("input");
-  const fenB = document.createElement("input");
-
-  const copyFENBtnW = document.createElement("button");
-  const copyFENBtnB = document.createElement("button");
-
-  copyFENBtnW.addEventListener("click", () => {
-    navigator.clipboard.writeText(fenWhite);
-  });
-
-  copyFENBtnB.addEventListener("click", () => {
-    navigator.clipboard.writeText(fenBlack);
-  });
-
-  copyFENBtnW.textContent = "copy";
-  copyFENBtnB.textContent = "copy";
-
-  fenW.value = fenWhite;
-  fenB.value = fenBlack;
-
-  fenW.disabled = true;
-  fenB.disabled = true;
-  fenContainer.append(fenW, copyFENBtnW, fenB, copyFENBtnB);
-
-  // * ============
-
-  cardWrapper.append(buttonsPanel, detectionCanvas.canvas, fenContainer);
-
-  return cardWrapper;
-}
-
-export function appendCardToSidebar(
-  detectionCanvas: DetectionCanvas,
-  regularFen: string,
-  reversedFen: string
-) {
-  const resultsDiv = document.querySelector(".detection-sidebar")!;
-  const card = createSidebarCard(detectionCanvas, regularFen, reversedFen);
-
-  resultsDiv.append(card);
 }
