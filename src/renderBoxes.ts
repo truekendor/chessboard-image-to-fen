@@ -237,7 +237,7 @@ function drawOutlinedArea({
   const y1 = (y - top) * ratio;
 
   detectionCanvas.width = width;
-  detectionCanvas.height = width;
+  detectionCanvas.height = height;
 
   detectionCanvas.x1 = x1;
   detectionCanvas.y1 = y1;
