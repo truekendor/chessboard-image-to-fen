@@ -1,7 +1,9 @@
 import { DetectionCanvas } from "../detection-canvas";
 import { NN } from "../nnHelper";
+import { ChessBoardCanvas } from "../previewCanvas";
 import { detectionCanvasList } from "../renderBoxes";
 import { detectionSidebar as sidebar } from "../sidebar";
+import { normalizeFenString } from "../utils";
 
 const outlineSVG = document.querySelector(".outline-svg_svg")!;
 
@@ -16,8 +18,8 @@ export function createSidebarCard(
   // * ============
   // * button panel
 
-  // const previewPredictionBtn = document.createElement("button");
-  // previewPredictionBtn.textContent = "preview";
+  const previewPredictionBtn = document.createElement("button");
+  previewPredictionBtn.textContent = "preview";
 
   const predictBtn = document.createElement("button");
   predictBtn.textContent = "predict";
@@ -26,11 +28,7 @@ export function createSidebarCard(
   deleteCardBtn.textContent = "delete";
 
   const buttonsPanel = document.createElement("div");
-  buttonsPanel.append(
-    // previewPredictionBtn,
-    predictBtn,
-    deleteCardBtn
-  );
+  buttonsPanel.append(predictBtn, previewPredictionBtn, deleteCardBtn);
   buttonsPanel.classList.add("detection-card__btn-panel");
 
   predictBtn.addEventListener("click", () => {
@@ -41,14 +39,6 @@ export function createSidebarCard(
     fenW.value = f1;
     fenB.value = f2;
   });
-
-  // previewPredictionBtn.addEventListener("pointerdown", () => {
-  //   //
-  // });
-
-  // previewPredictionBtn.addEventListener("pointerup", () => {
-  //   //
-  // });
 
   deleteCardBtn.addEventListener("click", () => {
     const index = detectionCanvasList.findIndex((el) => {
@@ -107,9 +97,41 @@ export function createSidebarCard(
   fenB.disabled = true;
   fenContainer.append(fenW, copyFENBtnW, fenB, copyFENBtnB);
 
+  const canvasWrapper = document.createElement("div");
+  canvasWrapper.classList.add("detection-card__canvas-wrapper");
+
+  // ! dev ----------
+
+  const normFen = normalizeFenString(fenWhite).filter((el) => el !== "/");
+  const helperCanvas = new ChessBoardCanvas(
+    detectionCanvas.width,
+    detectionCanvas.height
+  );
+
+  helperCanvas.drawChessboardFromFen(normFen);
+
+  const previewCanvas = document.createElement("canvas");
+  const ctx = previewCanvas.getContext("2d")!;
+  previewCanvas.width = detectionCanvas.width;
+  previewCanvas.height = detectionCanvas.height;
+
+  previewCanvas.classList.add("preview-canvas");
+  previewCanvas.classList.add("hidden");
+
+  ctx.putImageData(helperCanvas.imageData, 0, 0);
+
+  canvasWrapper.append(detectionCanvas.canvas, previewCanvas);
   // * ============
 
-  cardWrapper.append(buttonsPanel, detectionCanvas.canvas, fenContainer);
+  previewPredictionBtn.addEventListener("pointerdown", () => {
+    previewCanvas.classList.remove("hidden");
+  });
+
+  previewPredictionBtn.addEventListener("pointerup", () => {
+    previewCanvas.classList.add("hidden");
+  });
+
+  cardWrapper.append(buttonsPanel, canvasWrapper, fenContainer);
 
   return {
     card: cardWrapper,

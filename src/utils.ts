@@ -1,3 +1,10 @@
+/**
+ * Parses "normalized" FEN @see normalizeFenString
+ * back to regular FEN string
+ *
+ * @example
+ * ["1","1","1","r","Q","1","1","1"] -> "3rQ3"
+ */
 export function parseFenFromArray(
   fenArray: readonly string[]
 ): readonly [string, string] {
@@ -38,7 +45,7 @@ export function parseFenFromArray(
   return [fen.join("/"), reversedFen] as const;
 }
 
-function isNumber(value: unknown): boolean {
+export function isNumber(value: unknown): boolean {
   if (typeof value !== "string" && typeof value !== "number") {
     return false;
   }
@@ -48,6 +55,12 @@ function isNumber(value: unknown): boolean {
   );
 }
 
+/**
+ * Replaces numbers in FEN string with a series of '1'
+ *
+ * @example
+ * "3rQ3" -> ["1","1","1","r","Q","1","1","1"]  ("111rQ111")
+ */
 export function normalizeFenString(fen: string): string[] {
   const nFen = fen.split("").filter((el) => el !== "/");
   const answer: string[] = [];
