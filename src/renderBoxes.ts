@@ -173,8 +173,6 @@ export function renderSVGBoxes(
     detectionsOutlineSVG.append(group);
   }
 
-  // todo delete?
-
   setTimeout(() => {
     detectionCanvasList.forEach((detectionCanvas) => {
       const [regularFen, reversedFen] = NN.classification.classifyCanvas(

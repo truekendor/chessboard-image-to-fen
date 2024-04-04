@@ -22,7 +22,6 @@ export class NN {
 
   static async loadModels() {
     const [detectionModel, classificationModel, mobilenetFeatureVector] =
-      // todo delete comments
       await Promise.all([
         tf.loadGraphModel("./nn/detection_model/model.json"),
         tf.loadLayersModel("./nn/classification_model/model.json"),
@@ -56,6 +55,7 @@ export class NN {
   }
 
   static memoryUsage() {
+    // eslint-disable-next-line no-console
     console.log(
       `num tensors: ${tf.memory().numTensors}\n`,
       `num bytes  : ${tf.memory().numBytes}`

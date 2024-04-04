@@ -5,6 +5,5 @@ const sidebarExpandBtn: HTMLButtonElement = document.querySelector(
   "button.sidebar-expand-btn"
 )!;
 sidebarExpandBtn.addEventListener("click", () => {
-  console.log("click!");
   detectionSidebar.classList.toggle("shrink");
 });
