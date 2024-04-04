@@ -27,25 +27,23 @@ body,
 
 :root {
   --header-height: 50px;
-  --header-bg-color: rgb(24, 23, 18);
-  --footer-bg-color: rgb(24, 23, 18);
 
-  --body-bg-color: rgb(48, 46, 38);
+  --header-bg-color: rgb(19, 19, 19);
+  --footer-bg-color: rgb(19, 19, 19);
+
+  --body-bg-color: rgb(42, 42, 42);
 
   --backdrop-color: rgba(0, 0, 0, 0.35);
   --link-bg-color: hsl(48, 12%, 14%);
 
-  --font-color-links: hsl(28, 89%, 65%);
-  --font-color-links: 28, 89%, 65%;
-
   --switch-btn-color: hsl(40, 4%, 15%);
 
-  --font-color-main: rgb(235, 235, 235);
+  --font-color-main: rgb(224, 219, 215);
 
-  --light-tile: hsl(40, 9%, 14%);
-  --dark-tile: hsl(40, 9%, 11%);
+  --light-tile: hsl(0, 0%, 13%);
+  --dark-tile: hsl(0, 0%, 9%);
 
-  --label-bg-color: hsl(40, 9%, 16%);
+  --label-bg-color: hsl(0, 0%, 15%);
   --label-bg-color-hover: hsl(40, 9%, 19%);
 
   --outline-color: hsla(38, 31%, 80%, 0.75);
