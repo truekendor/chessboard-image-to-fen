@@ -1,116 +1,35 @@
-import { NN } from "./nnHelper";
+import { NN, appendCardToSidebar } from "./nnHelper";
 import { MainCanvas } from "./main";
+import { DetectionCanvas } from "./detection-canvas";
 
-const rectsContainer: HTMLDivElement = document.querySelector(
+const detectionsOutlineContainer: HTMLDivElement = document.querySelector(
   ".outline-svg_container"
 )!;
-const rectsSVG = rectsContainer.querySelector("svg")!;
+const detectionsOutlineSVG = detectionsOutlineContainer.querySelector("svg")!;
 
-const getIncId = (function () {
-  let id = 1;
-  return () => id++;
-})();
-
-type DetectionResultType = {
-  score: number;
-  aspectRatio: number;
-  width: number;
-  height: number;
-  x1: number;
-  x2: number;
-  y1: number;
-  y2: number;
-  mainContext: CanvasRenderingContext2D;
-};
-
-class DetectionResult implements DetectionResultType {
-  canvas: HTMLCanvasElement = document.createElement("canvas");
-  ctx: CanvasRenderingContext2D = this.canvas.getContext("2d", {
-    willReadFrequently: true,
-  })!;
-
-  id = getIncId();
-
-  score = 0;
-  aspectRatio = 0;
-  width = 0;
-  height = 0;
-
-  x1 = 0;
-  x2 = 0;
-  y1 = 0;
-  y2 = 0;
-
-  mainContext: CanvasRenderingContext2D;
-
-  constructor({
-    score,
-    aspectRatio,
-    width,
-    height,
-    x1,
-    x2,
-    y1,
-    y2,
-    mainContext,
-  }: DetectionResultType) {
-    this.score = score;
-    this.aspectRatio = aspectRatio;
-    this.width = width;
-    this.height = height;
-    //
-    this.x1 = x1;
-    this.x2 = x2;
-    this.y1 = y1;
-    this.y2 = y2;
-
-    this.mainContext = mainContext;
-
-    this.canvas.id = `dt-canvas-${this.id}`;
-    this.canvas.setAttribute("data-id", `${this.id}`);
-
-    this.draw();
-  }
-
-  private draw() {
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-
-    this.ctx.filter = "grayscale(1)";
-
-    const mainCanvasData = MainCanvas.ctx.getImageData(
-      this.x1,
-      this.y1,
-      this.width,
-      this.height
-    );
-
-    this.ctx.putImageData(mainCanvasData, 0, 0);
-    this.ctx.drawImage(this.canvas, 0, 0);
-  }
-}
+const detectionCanvasList: DetectionCanvas[] = [];
 
 function createResizableSVGGroup({
   x1,
   y1,
   width,
   height,
-  canvasId,
+  detectionCanvas,
 }: {
   x1: number;
   y1: number;
   width: number;
   height: number;
-  canvasId: number;
+  detectionCanvas: DetectionCanvas;
 }) {
   const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
   const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 
-  group.id = `dt-group-${canvasId}`;
-  rect.id = `dt-rect-${canvasId}`;
+  group.id = `dt-group-${detectionCanvas.id}`;
+  rect.id = `dt-rect-${detectionCanvas.id}`;
 
-  group.setAttribute("data-id", `${canvasId}`);
-  rect.setAttribute("data-id", `${canvasId}`);
+  group.setAttribute("data-id", `${detectionCanvas.id}`);
+  rect.setAttribute("data-id", `${detectionCanvas.id}`);
 
   group.append(rect);
 
@@ -166,10 +85,12 @@ function createResizableSVGGroup({
       drawOutlinedArea({
         x: pubX,
         y: pubY,
-        canvas: sidebarCanvas,
-        styleHeight: height,
-        styleWidth: width,
+        detectionCanvas: detectionCanvas,
+        styleWidth: detectionCanvas.width,
+        styleHeight: detectionCanvas.height,
       });
+
+      return;
     }
   });
 
@@ -177,17 +98,18 @@ function createResizableSVGGroup({
 }
 
 export function renderSVGBoxes(
-  canvas: HTMLCanvasElement,
   boxes_data: Float32Array,
   scores_data: Float32Array,
   ratios: [number, number]
-): DetectionResult[] {
-  const resultsList: DetectionResult[] = [];
+): DetectionCanvas[] {
+  const canvas = MainCanvas.canvas;
+  const { left, top } = MainCanvas.boundingRect;
+  const ratio = MainCanvas.ratio;
 
-  const prevGroups = rectsSVG.querySelectorAll("g");
+  const prevGroups = detectionsOutlineSVG.querySelectorAll("g");
 
   prevGroups.forEach((rect) => {
-    rectsSVG.removeChild(rect);
+    detectionsOutlineSVG.removeChild(rect);
   });
 
   for (let i = 0; i < scores_data.length; ++i) {
@@ -209,9 +131,6 @@ export function renderSVGBoxes(
 
     let [y1, x1, y2, x2] = boxes_data.slice(i * 4, (i + 1) * 4);
 
-    const { left, top } = MainCanvas.boundingRect;
-    const ratio = MainCanvas.ratio;
-
     x1 = (x1 / 640) * canvas.width * ratios[0];
     x2 = (x2 / 640) * canvas.width * ratios[0];
     y1 = (y1 / 640) * canvas.height * ratios[1];
@@ -224,56 +143,46 @@ export function renderSVGBoxes(
     // todo make rect pool; 50 rects should be more than enough
 
     const cX1 = left + x1 / ratio;
-    // const cX2 = left + x2 / ratio;
 
     const cY1 = top + y1 / ratio;
-    // const cY2 = top + y2 / ratio;
 
     const cWidth = width / ratio;
     const cHeight = height / ratio;
 
-    // const detection = new DetectionResult({
-    //   aspectRatio,
-    //   width,
-    //   height,
-    //   score,
-    //   x1,
-    //   x2,
-    //   y1,
-    //   y2,
-    //   mainContext,
-    // });
-
-    const detection = new DetectionResult({
+    const detectionCanvas = new DetectionCanvas({
       aspectRatio,
       width,
       height,
       score,
       x1,
-      x2,
       y1,
-      y2,
-      mainContext: MainCanvas.ctx,
     });
 
-    resultsList.push(detection);
+    detectionCanvasList.push(detectionCanvas);
 
     const group = createResizableSVGGroup({
       x1: cX1,
       y1: cY1,
       width: cWidth,
       height: cHeight,
-      canvasId: detection.id,
+      detectionCanvas,
     });
 
-    rectsSVG.append(group);
+    detectionsOutlineSVG.append(group);
   }
 
-  resultsList.forEach((res) => {
-    NN.classification.__dev_classifyRes(res);
-  });
+  // todo delete?
 
-  return resultsList;
+  setTimeout(() => {
+    detectionCanvasList.forEach((detectionResult) => {
+      const [regularFen, reversedFen] = NN.classification.classifyCanvas(
+        detectionResult.canvas
+      );
+      appendCardToSidebar(detectionResult, regularFen, reversedFen);
+    });
+  }, 25);
+
+  return detectionCanvasList;
 }
 
 // todo move to css calc() with css custom props
@@ -299,17 +208,14 @@ function drawOutlinedArea({
   y,
   styleHeight,
   styleWidth,
-  canvas,
+  detectionCanvas,
 }: {
   x: number;
   y: number;
   styleWidth: number;
   styleHeight: number;
-  canvas: HTMLCanvasElement;
+  detectionCanvas: DetectionCanvas;
 }) {
-  // NN.memoryUsage();
-
-  // const ratio = mainCanvas.width / canvasStyleWidth;
   const ratio = MainCanvas.ratio;
   const mainContext = MainCanvas.ctx;
   const { left, top } = MainCanvas.boundingRect;
@@ -321,19 +227,19 @@ function drawOutlinedArea({
     return;
   }
 
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext("2d")!;
+  const x1 = (x - left) * ratio;
+  const y1 = (y - top) * ratio;
+
+  detectionCanvas.width = width;
+  detectionCanvas.height = width;
+
+  detectionCanvas.x1 = x1;
+  detectionCanvas.y1 = y1;
 
   try {
-    const data = mainContext.getImageData(
-      (x - left) * ratio,
-      (y - top) * ratio,
-      width,
-      height
-    );
+    const data = mainContext.getImageData(x1, y1, width, height);
 
-    ctx.putImageData(data, 0, 0);
+    detectionCanvas.ctx.putImageData(data, 0, 0);
   } catch {
     return;
   }
@@ -341,6 +247,7 @@ function drawOutlinedArea({
 
 let circleIndex = 0;
 
+let currentDetectionCanvas: DetectionCanvas | null = null;
 let groupToResize: HTMLElement | null = null;
 let rectToResize: SVGRectElement | null = null;
 let circleTarget: SVGCircleElement | null = null;
@@ -354,15 +261,23 @@ window.addEventListener("pointerdown", (e) => {
   const dataIndex = target.getAttribute("data-index")!;
   const dataId = target.getAttribute("data-id");
 
-  if (dataId && !dataIndex) {
-    sidebarCanvas = document.querySelector(`#dt-canvas-${dataId}`)!;
-    groupToResize = document.querySelector(`#dt-group-${dataId}`)!;
+  const rectClicked = dataId && !dataIndex;
+  const circleClicked = !!dataIndex;
 
-    rectToResize = groupToResize.querySelector("rect")!;
+  if (rectClicked) {
+    currentDetectionCanvas =
+      detectionCanvasList.find((el) => {
+        return el.id === parseInt(dataId);
+      }) || null;
+
+    sidebarCanvas = document.querySelector(`#dt-canvas-${dataId}`);
+    groupToResize = document.querySelector(`#dt-group-${dataId}`);
+
+    rectToResize = groupToResize?.querySelector("rect") || null;
     return;
   }
 
-  if (!dataIndex) {
+  if (!circleClicked) {
     return;
   }
   circleIndex = parseInt(dataIndex);
@@ -377,21 +292,26 @@ window.addEventListener("pointerdown", (e) => {
   const id = parseInt(groupToResize.getAttribute("data-id")!);
   sidebarCanvas = document.querySelector(`#dt-canvas-${id}`);
 
-  rectsContainer.querySelectorAll("rect").forEach((rect) => {
+  currentDetectionCanvas =
+    detectionCanvasList.find((el) => {
+      return el.id === id;
+    }) || null;
+
+  detectionsOutlineContainer.querySelectorAll("rect").forEach((rect) => {
     rect.classList.add("pointer-none");
   });
 });
 
-window.addEventListener("pointerup", resetOutlineState);
-window.addEventListener("pointerleave", resetOutlineState);
-window.addEventListener("pointerenter", resetOutlineState);
+window.addEventListener("pointerup", resetCurrentOutlineState);
+window.addEventListener("pointerleave", resetCurrentOutlineState);
+window.addEventListener("pointerenter", resetCurrentOutlineState);
 
-function resetOutlineState() {
+function resetCurrentOutlineState() {
   if (groupToResize) {
     groupToResize.classList.remove("group-active");
   }
   if (rectToResize) {
-    rectsContainer.querySelectorAll("rect").forEach((rect) => {
+    detectionsOutlineContainer.querySelectorAll("rect").forEach((rect) => {
       rect.classList.remove("pointer-none");
       rect.classList.remove("rect-active");
     });
@@ -402,6 +322,7 @@ function resetOutlineState() {
   rectToResize = null;
   circleTarget = null;
   sidebarCanvas = null;
+  currentDetectionCanvas = null;
 }
 
 window.addEventListener("pointermove", (e) => {
@@ -413,7 +334,13 @@ window.addEventListener("pointermove", (e) => {
   // ! todo rewrite with tracking current pointer position
   // ! instead of adding movement(x/y) components
 
-  if (!circleTarget || !rectToResize || !groupToResize || !sidebarCanvas) {
+  if (
+    !circleTarget ||
+    !rectToResize ||
+    !groupToResize ||
+    !sidebarCanvas ||
+    !currentDetectionCanvas
+  ) {
     return;
   }
 
@@ -464,7 +391,7 @@ window.addEventListener("pointermove", (e) => {
   drawOutlinedArea({
     x: rectX,
     y: rectY,
-    canvas: sidebarCanvas,
+    detectionCanvas: currentDetectionCanvas,
     styleWidth: rectWidth,
     styleHeight: rectHeight,
   });

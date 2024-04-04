@@ -2,7 +2,7 @@ import "./styles/style.css";
 import "./styles/chessboard.css";
 import "./styles/loader.css";
 import "./styles/detectionRects.css";
-import "./styles/detectionsSidebar.css";
+import "./styles/sidebar.css";
 
 import { NN } from "./nnHelper.js";
 
@@ -73,17 +73,7 @@ async function convertFileAndPredict(file: Blob) {
 
   MainCanvas.calcNewRect();
 
-  const detectionResult = await NN.detection.detectChessboards(
-    img,
-    NN.models.detectionModel,
-    MainCanvas.canvas
-  );
-
-  setTimeout(() => {
-    // todo delete
-    detectionResult;
-    // NN.classification.classifyDetectionResults(canvas, detectionResult);
-  });
+  await NN.detection.detectChessboards(img, NN.models.detectionModel);
 
   return;
 }

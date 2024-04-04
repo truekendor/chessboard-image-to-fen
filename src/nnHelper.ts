@@ -2,9 +2,7 @@ import * as tf from "@tensorflow/tfjs";
 import { parseFenFromArray } from "./utils";
 
 import { renderSVGBoxes } from "./renderBoxes.js";
-
-// bottom container with links to lichess
-const linkContainer: HTMLDivElement = document.querySelector(".links")!;
+import { DetectionCanvas } from "./detection-canvas.js";
 
 export class NN {
   // static URL = `https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v3_small_100_224/feature_vector/5/default/1`;
@@ -78,8 +76,7 @@ class DetectionHelper {
    */
   static async detectChessboards(
     source: HTMLImageElement,
-    model: tf.GraphModel,
-    canvasRef: HTMLCanvasElement
+    model: tf.GraphModel
   ) {
     const [modelWidth, modelHeight] = this.modelShape; // get model width and height
 
@@ -140,7 +137,6 @@ class DetectionHelper {
     tf.engine().endScope(); // end of scoping
 
     const detectionResult = renderSVGBoxes(
-      canvasRef,
       boxes_data,
       scores_data,
       // classes_data,
@@ -211,123 +207,19 @@ class ClassificationHelper {
     this.chessPiecesLookup
   ) as (keyof typeof this.chessPiecesLookup)[];
 
-  // todo delete
-  static __dev_classifyRes(
-    result: Awaited<
-      ReturnType<typeof DetectionHelper.detectChessboards>
-    >[number]
-  ) {
-    const resultsDiv = document.querySelector(".detection-sidebar")!;
-
+  static classifyCanvas(canvas: HTMLCanvasElement) {
     const tileCanvas = document.createElement("canvas");
+    let regularFen = "";
+    let reversedFen = "";
 
     tf.tidy(() => {
-      const { canvas: boardCanvas } = result;
-
-      resultsDiv.append(boardCanvas);
-
-      const tileFeatures = this.extractTileFeatures(boardCanvas, tileCanvas);
+      const tileFeatures = this.extractTileFeatures(canvas, tileCanvas);
       const fenArray = this.classifyTiles(tileFeatures);
 
-      const [parsedFen, reversedFen] = parseFenFromArray(fenArray);
-      // todo delete
-      reversedFen;
-
-      // todo uncomment after improvement
-      // saves predicted images to fenImageData object
-      // savePredictedImages(parsedFen, reversedFen);
-
-      const wrapperOne = document.createElement("div");
-      const wrapperTwo = document.createElement("div");
-      wrapperOne.classList.add("link-wrapper");
-      wrapperTwo.classList.add("link-wrapper");
-
-      // todo delete
-      // const [linkLichess, linkLichessReversed] = createLichessLink(
-      //   parsedFen,
-      //   reversedFen
-      // );
-      // const [copyWhite, copyBlack] = createCopyButtons(parsedFen, reversedFen);
-
-      // wrapperOne.append(linkLichess, copyWhite);
-      // wrapperTwo.append(linkLichessReversed, copyBlack);
-
-      console.log(`fen: ${parsedFen}`);
-
-      // to get rid of children nodes
-      linkContainer.innerHTML = "";
-
-      linkContainer.append(wrapperOne, wrapperTwo);
+      [regularFen, reversedFen] = parseFenFromArray(fenArray);
     });
-  }
-  static classifyDetectionResults(
-    canvas: HTMLCanvasElement,
-    results: Awaited<ReturnType<typeof DetectionHelper.detectChessboards>>
-  ) {
-    const ctx = canvas.getContext("2d", {
-      willReadFrequently: true,
-    })!;
 
-    const resultsDiv = document.querySelector(".detection-sidebar")!;
-
-    const tileCanvas = document.createElement("canvas");
-
-    tf.tidy(() => {
-      results.forEach((_, index) => {
-        const { width, height, x1, y1 } = results[index];
-
-        // todo move to state, no need to recreate for each function call
-        // local canvas
-        const boardCanvas = document.createElement("canvas");
-        const bCtx = boardCanvas.getContext("2d", {
-          willReadFrequently: true,
-        })!;
-
-        boardCanvas.width = width;
-        boardCanvas.height = height;
-
-        bCtx.filter = "grayscale(1)";
-        const boardData = ctx.getImageData(x1, y1, width, height);
-        bCtx.putImageData(boardData, 0, 0);
-
-        bCtx.drawImage(boardCanvas, 0, 0);
-
-        resultsDiv.append(boardCanvas);
-
-        const tileFeatures = this.extractTileFeatures(boardCanvas, tileCanvas);
-        const fenArray = this.classifyTiles(tileFeatures);
-
-        const [parsedFen, reversedFen] = parseFenFromArray(fenArray);
-        // todo delete
-        reversedFen;
-
-        // todo uncomment after improvement
-        // saves predicted images to fenImageData object
-        // savePredictedImages(parsedFen, reversedFen);
-
-        // const wrapperOne = document.createElement("div");
-        // const wrapperTwo = document.createElement("div");
-        // wrapperOne.classList.add("link-wrapper");
-        // wrapperTwo.classList.add("link-wrapper");
-
-        // todo delete
-        // const [linkLichess, linkLichessReversed] = createLichessLink(
-        //   parsedFen,
-        //   reversedFen
-        // );
-        // const [copyWhite, copyBlack] = createCopyButtons(parsedFen, reversedFen);
-
-        // wrapperOne.append(linkLichess, copyWhite);
-        // wrapperTwo.append(linkLichessReversed, copyBlack);
-
-        console.log(`fen: ${parsedFen}`);
-
-        // to get rid of child nodes
-        // linkContainer.innerHTML = "";
-
-        // linkContainer.append(wrapperOne, wrapperTwo);
-      });
-    });
+    return [regularFen, reversedFen] as const;
   }
 
   private static extractTileFeatures(
@@ -437,4 +329,80 @@ class ClassificationHelper {
       return result;
     });
   }
+}
+
+function createSidebarCard(
+  detectionCanvas: DetectionCanvas,
+  fenWhite: string,
+  fenBlack: string
+) {
+  const cardWrapper = document.createElement("div");
+  cardWrapper.classList.add("detection-card");
+
+  // * ============
+  // * button panel
+
+  const previewPredictionBtn = document.createElement("button");
+  previewPredictionBtn.textContent = "preview";
+
+  const predictBtn = document.createElement("button");
+  predictBtn.textContent = "predict";
+
+  const buttonsPanel = document.createElement("div");
+  buttonsPanel.append(previewPredictionBtn, predictBtn);
+
+  predictBtn.addEventListener("click", () => {
+    const [f1, f2] = NN.classification.classifyCanvas(
+      detectionCanvas.toGrayScale().canvas
+    );
+
+    console.log("bruhhhh", f1, f2);
+  });
+
+  // * ============
+  // * fen
+
+  const fenContainer = document.createElement("div");
+  fenContainer.classList.add("fen-container");
+
+  const fenW = document.createElement("input");
+  const fenB = document.createElement("input");
+
+  const copyFENBtnW = document.createElement("button");
+  const copyFENBtnB = document.createElement("button");
+
+  copyFENBtnW.addEventListener("click", () => {
+    navigator.clipboard.writeText(fenWhite);
+  });
+
+  copyFENBtnB.addEventListener("click", () => {
+    navigator.clipboard.writeText(fenBlack);
+  });
+
+  copyFENBtnW.textContent = "copy";
+  copyFENBtnB.textContent = "copy";
+
+  fenW.value = fenWhite;
+  fenB.value = fenBlack;
+
+  fenW.disabled = true;
+  fenB.disabled = true;
+  fenContainer.append(fenW, copyFENBtnW, fenB, copyFENBtnB);
+
+  // * ============
+
+  cardWrapper.append(buttonsPanel, detectionCanvas.canvas, fenContainer);
+
+  return cardWrapper;
+}
+
+export function appendCardToSidebar(
+  detectionCanvas: DetectionCanvas,
+  regularFen: string,
+  reversedFen: string
+) {
+  const resultsDiv = document.querySelector(".detection-sidebar")!;
+  const card = createSidebarCard(detectionCanvas, regularFen, reversedFen);
+
+  resultsDiv.append(card);
 }
