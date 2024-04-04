@@ -39,6 +39,9 @@
 }
 
 .detection-sidebar__panel {
+  display: flex;
+  justify-content: end;
+
   position: sticky;
   top: 0;
   z-index: 2;
@@ -46,6 +49,22 @@
   background-color: inherit;
 
   padding: 3px;
+}
+
+.detection-sidebar__panel > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: min-content;
+  height: min-content;
+
+  outline: transparent;
+  border: transparent;
+
+  padding: 2px;
+
+  cursor: pointer;
 }
 
 /* sidebar card */

@@ -8,7 +8,7 @@ const detectionsOutlineContainer: HTMLDivElement = document.querySelector(
 )!;
 const detectionsOutlineSVG = detectionsOutlineContainer.querySelector("svg")!;
 
-const detectionCanvasList: DetectionCanvas[] = [];
+export const detectionCanvasList: DetectionCanvas[] = [];
 
 function createResizableSVGGroup({
   x1,
@@ -175,12 +175,12 @@ export function renderSVGBoxes(
   // todo delete?
 
   setTimeout(() => {
-    detectionCanvasList.forEach((detectionResult) => {
+    detectionCanvasList.forEach((detectionCanvas) => {
       const [regularFen, reversedFen] = NN.classification.classifyCanvas(
-        detectionResult.canvas
+        detectionCanvas.canvas
       );
       createSidebarCard(
-        detectionResult,
+        detectionCanvas,
         regularFen,
         reversedFen
       ).appendCardToSidebar();
@@ -411,3 +411,30 @@ function sidebarRemovePredictions() {
     sidebar.removeChild(card);
   });
 }
+
+const addNewRectBtn: HTMLButtonElement =
+  document.querySelector(".add-rect__btn")!;
+
+addNewRectBtn.addEventListener("click", () => {
+  const detectionCanvas = new DetectionCanvas({
+    aspectRatio: 1,
+    score: 0,
+    width: 200,
+    height: 200,
+    x1: MainCanvas.boundingRect.left,
+    y1: MainCanvas.boundingRect.top,
+  });
+
+  const group = createResizableSVGGroup({
+    x1: MainCanvas.boundingRect.left,
+    y1: MainCanvas.boundingRect.top,
+    width: 200,
+    height: 200,
+    detectionCanvas,
+  });
+
+  detectionsOutlineSVG.append(group);
+  detectionCanvasList.push(detectionCanvas);
+
+  createSidebarCard(detectionCanvas, "-", "-").appendCardToSidebar();
+});

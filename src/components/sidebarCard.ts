@@ -1,6 +1,9 @@
 import { DetectionCanvas } from "../detection-canvas";
-
 import { NN } from "../nnHelper";
+import { detectionCanvasList } from "../renderBoxes";
+
+const sidebar = document.querySelector(".detection-sidebar")!;
+const outlineSVG = document.querySelector(".outline-svg_svg")!;
 
 export function createSidebarCard(
   detectionCanvas: DetectionCanvas,
@@ -19,8 +22,11 @@ export function createSidebarCard(
   const predictBtn = document.createElement("button");
   predictBtn.textContent = "predict";
 
+  const deleteCardBtn = document.createElement("button");
+  deleteCardBtn.textContent = "delete";
+
   const buttonsPanel = document.createElement("div");
-  buttonsPanel.append(previewPredictionBtn, predictBtn);
+  buttonsPanel.append(previewPredictionBtn, predictBtn, deleteCardBtn);
 
   predictBtn.addEventListener("click", () => {
     const [f1, f2] = NN.classification.classifyCanvas(
@@ -29,6 +35,41 @@ export function createSidebarCard(
 
     fenW.value = f1;
     fenB.value = f2;
+  });
+
+  previewPredictionBtn.addEventListener("pointerdown", () => {
+    //
+  });
+
+  previewPredictionBtn.addEventListener("pointerup", () => {
+    //
+  });
+
+  deleteCardBtn.addEventListener("click", () => {
+    const index = detectionCanvasList.findIndex((el) => {
+      return el.id === detectionCanvas.id;
+    });
+
+    detectionCanvasList.splice(index, 1);
+
+    const cards = sidebar.querySelectorAll(".detection-card");
+    cards.forEach((card) => {
+      const cardCanvas = card.querySelector("canvas")!;
+      const dataId = parseInt(cardCanvas.getAttribute("data-id")!);
+
+      if (dataId === detectionCanvas.id) {
+        sidebar.removeChild(card);
+      }
+    });
+
+    const groups = outlineSVG.querySelectorAll("g");
+    groups.forEach((group) => {
+      const dataId = parseInt(group.getAttribute("data-id")!);
+
+      if (dataId === detectionCanvas.id) {
+        outlineSVG.removeChild(group);
+      }
+    });
   });
 
   // * ============

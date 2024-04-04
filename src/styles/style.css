@@ -40,7 +40,7 @@ body,
 
   --font-color-main: rgb(224, 219, 215);
 
-  --sidebar-bg-color: #000000;
+  --sidebar-bg-color: #0b0b0b;
 
   /* chessboard */
   --light-tile: hsl(0, 0%, 13%);
@@ -286,4 +286,45 @@ utils
     overflow: hidden;
     isolation: isolate;
   }
+}
+
+.add-rect__btn {
+  position: absolute;
+  top: var(--header-height);
+
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+
+  gap: 5px;
+  padding: 5px;
+
+  border: none;
+  border-radius: 3px;
+
+  background-color: rgb(8, 8, 8);
+
+  font-weight: bolder;
+  color: var(--paste-drop-color);
+
+  cursor: pointer;
+  pointer-events: all;
+
+  z-index: 3;
+}
+
+.add-rect__btn > * {
+  pointer-events: none;
+}
+
+.rect-div {
+  width: 20px;
+  height: 20px;
+
+  border-radius: 3px;
+
+  border: 2px solid var(--paste-drop-color);
 }

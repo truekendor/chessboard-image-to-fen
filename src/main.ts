@@ -32,6 +32,8 @@ export class MainCanvas {
 NN.loadModels();
 
 const fileInput: HTMLInputElement = document.querySelector("#image-input")!;
+const addNewRectBtn: HTMLButtonElement =
+  document.querySelector(".add-rect__btn")!;
 
 async function convertFileAndPredict(file: Blob) {
   const img = new Image();
@@ -49,6 +51,8 @@ async function convertFileAndPredict(file: Blob) {
       const infoDiv: HTMLDivElement = document.querySelector(
         ".paste-drop-tooltip"
       )!;
+
+      addNewRectBtn.classList.remove("hidden");
 
       chessboardGrid.classList.add("hidden");
 
