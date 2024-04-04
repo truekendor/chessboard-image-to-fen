@@ -108,6 +108,7 @@ export function renderSVGBoxes(
   const ratio = MainCanvas.ratio;
 
   const prevGroups = detectionsOutlineSVG.querySelectorAll("g");
+  sidebarRemovePredictions();
 
   prevGroups.forEach((rect) => {
     detectionsOutlineSVG.removeChild(rect);
@@ -144,7 +145,6 @@ export function renderSVGBoxes(
     // todo make rect pool; 50 rects should be more than enough
 
     const cX1 = left + x1 / ratio;
-
     const cY1 = top + y1 / ratio;
 
     const cWidth = width / ratio;
@@ -401,3 +401,13 @@ window.addEventListener("pointermove", (e) => {
     styleHeight: rectHeight,
   });
 });
+
+function sidebarRemovePredictions() {
+  const sidebar = document.querySelector(".detection-sidebar")!;
+  detectionCanvasList.length = 0;
+
+  const cards = sidebar.querySelectorAll(".detection-card");
+  cards.forEach((card) => {
+    sidebar.removeChild(card);
+  });
+}
