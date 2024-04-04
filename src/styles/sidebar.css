@@ -36,6 +36,10 @@
   height: 0px;
 }
 
+.detection-sidebar:not(.shrink) .sidebar-expand-btn svg {
+  transform: rotate(180deg);
+}
+
 .detection-sidebar::-webkit-scrollbar {
   width: 8px;
 }
