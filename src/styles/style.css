@@ -26,6 +26,7 @@ body,
 }
 
 :root {
+  --header-height: 50px;
   --header-bg-color: rgb(24, 23, 18);
   --footer-bg-color: rgb(24, 23, 18);
 
@@ -39,7 +40,7 @@ body,
 
   --switch-btn-color: hsl(40, 4%, 15%);
 
-  --font-color-main: rgb(224, 219, 215);
+  --font-color-main: rgb(235, 235, 235);
 
   --light-tile: hsl(40, 9%, 14%);
   --dark-tile: hsl(40, 9%, 11%);
@@ -54,8 +55,6 @@ body,
   --chessboard-placeholder-width: min(600px, 95%);
 
   --paste-drop-color: rgb(194, 191, 184);
-
-  --header-height: 50px;
 }
 
 /* 
@@ -72,7 +71,7 @@ themes (not implemented)
   -btn colors
 */
 body.light {
-  --_footer-header: #2d2d34;
+  --_footer-header: #1c1c21;
   --header-bg-color: var(--_footer-header);
   --footer-bg-color: #ceb1be;
 
@@ -85,7 +84,6 @@ body.light {
   --font-color-links: 20, 6%, 9%;
 
   --light-tile: #dad3d5;
-  /* --dark-tile: #ceb1be; */
   --dark-tile: #c7bcc0;
 
   --paste-drop-color: #2d2d34;
@@ -258,109 +256,6 @@ Paste/Drop hint div
 
 .insert-object {
   fill: currentColor;
-}
-
-/* 
-----------------
-bottom panel / footer
-----------------
-*/
-
-.links {
-  display: grid;
-  place-items: center;
-
-  gap: 0.2rem;
-
-  grid-template-columns: 1fr;
-
-  width: 100%;
-
-  margin-block-start: auto;
-
-  padding-block: 0.8rem;
-
-  flex-direction: column;
-
-  background-color: var(--footer-bg-color);
-
-  /* min-height: 14%; */
-  height: fit-content;
-
-  position: relative;
-}
-
-.links:empty {
-  height: 15%;
-}
-
-.link-wrapper {
-  display: flex;
-
-  padding: 0.5rem;
-}
-
-.links a {
-  word-break: break-all;
-
-  padding-block: 0.2rem;
-  background-color: var(--link-bg-color);
-
-  border-radius: 4px;
-
-  padding-inline: 0.4rem;
-
-  font-family: monospace;
-
-  color: hsl(var(--font-color-links));
-  font-weight: 600;
-  font-size: 1.2rem;
-  line-height: 1.1;
-
-  text-align: center;
-  text-decoration: none;
-
-  outline: 1px solid var(--outline-subtle);
-}
-
-.links a:hover {
-  text-decoration: underline;
-}
-
-.copy-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  padding-inline: 0.5rem;
-
-  outline: transparent;
-  border: transparent;
-
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-
-  cursor: pointer;
-
-  background-color: transparent;
-  outline: 1px solid var(--outline-subtle);
-
-  font-size: 1rem;
-  color: var(--font-color-main);
-  font-weight: 600;
-
-  border-left: 1px solid var(--outline-subtle);
-
-  transition: background-color 80ms ease;
-}
-
-.copy-btn:hover,
-.copy-btn:focus-visible {
-  background-color: var(--link-bg-color);
-}
-
-.copy-btn:focus-visible {
-  outline: 1px solid var(--outline-color);
 }
 
 /* 
