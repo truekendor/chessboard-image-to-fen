@@ -1,0 +1,125 @@
+.loader {
+  position: fixed;
+  inset: 0;
+
+  background-color: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+
+  width: 100%;
+  height: 100%;
+
+  z-index: 99999;
+
+  pointer-events: all;
+}
+
+.loader h3 {
+  color: rgb(234, 234, 229);
+}
+
+.loader ~ .main-container .paste-drop-tooltip,
+.loader ~ .main-container .paste-drop-tooltip svg {
+  color: transparent;
+  fill: transparent;
+}
+
+/* left loader */
+.circle-svg {
+  --_circle-radius: 45px;
+  --_svg-width: 100px;
+  --_stroke-width: calc(var(--_svg-width) - 2 * var(--_circle-radius));
+  --_animation_duration: 8000ms;
+  --_angle: 1.6;
+
+  width: var(--_svg-width);
+
+  aspect-ratio: 1/1;
+
+  stroke: rgb(207, 208, 203);
+  stroke-width: var(--_stroke-width);
+
+  animation: loader var(--_animation_duration) infinite,
+    spin 3000ms infinite linear;
+}
+
+@keyframes loader {
+  /**
+    small_arc = 30deg 
+  
+    magic numbers:
+    0.16666667 = small_arc / 180
+    1.83333333 = 2 - (small_arc / 180)
+  
+    rotation step          : 360 - (2 * small_arc)  = 300
+    № of animation steps   : 360/small_arc + 1      = 13
+    animation percent step : small_arc/3.6          = 8.33
+  */
+  0% {
+    rotate: 0deg;
+    stroke-dasharray: calc(var(--_circle-radius) * 3.1415 * 0.16666667) 1000;
+  }
+  8.33% {
+    rotate: 0deg;
+    stroke-dasharray: calc(var(--_circle-radius) * 3.1415 * 1.83333333) 1000;
+  }
+  16.66% {
+    rotate: 300deg;
+    stroke-dasharray: calc(var(--_circle-radius) * 3.1415 * 0.16666667) 1000;
+  }
+  25% {
+    rotate: 300deg;
+    stroke-dasharray: calc(var(--_circle-radius) * 3.1415 * 1.83333333) 1000;
+  }
+  33.33% {
+    rotate: 600deg;
+    stroke-dasharray: calc(var(--_circle-radius) * 3.1415 * 0.16666667) 1000;
+  }
+  41.66% {
+    rotate: 600deg;
+    stroke-dasharray: calc(var(--_circle-radius) * 3.1415 * 1.83333333) 1000;
+  }
+  50% {
+    rotate: 900deg;
+    stroke-dasharray: calc(var(--_circle-radius) * 3.1415 * 0.16666667) 1000;
+  }
+  58.33% {
+    rotate: 900deg;
+    stroke-dasharray: calc(var(--_circle-radius) * 3.1415 * 1.83333333) 1000;
+  }
+  66.66% {
+    rotate: 1200deg;
+    stroke-dasharray: calc(var(--_circle-radius) * 3.1415 * 0.16666667) 1000;
+  }
+  75% {
+    rotate: 1200deg;
+    stroke-dasharray: calc(var(--_circle-radius) * 3.1415 * 1.83333333) 1000;
+  }
+  83.33% {
+    rotate: 1500deg;
+    stroke-dasharray: calc(var(--_circle-radius) * 3.1415 * 0.16666667) 1000;
+  }
+  91.66% {
+    rotate: 1500deg;
+    stroke-dasharray: calc(var(--_circle-radius) * 3.1415 * 1.83333333) 1000;
+  }
+
+  100% {
+    rotate: 1800deg;
+    stroke-dasharray: calc(var(--_circle-radius) * 3.1415 * 0.16666667) 1000;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

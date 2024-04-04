@@ -1,0 +1,330 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body,
+#app {
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+
+  flex-direction: column;
+
+  font-family: Helvetica, Arial, sans-serif;
+
+  background-color: var(--body-bg-color);
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+:root {
+  --header-height: 50px;
+
+  --header-bg-color: rgb(19, 19, 19);
+  --footer-bg-color: rgb(19, 19, 19);
+
+  --body-bg-color: rgb(42, 42, 42);
+
+  --backdrop-color: rgba(0, 0, 0, 0.35);
+  --link-bg-color: hsl(48, 12%, 14%);
+
+  --switch-btn-color: hsl(40, 4%, 15%);
+
+  --font-color-main: rgb(224, 219, 215);
+
+  --sidebar-bg-color: #0b0b0b;
+
+  /* chessboard */
+  --light-tile: hsl(0, 0%, 13%);
+  --dark-tile: hsl(0, 0%, 9%);
+
+  --label-bg-color: hsl(0, 0%, 15%);
+  --label-bg-color-hover: hsl(40, 9%, 19%);
+
+  --outline-color: hsla(38, 31%, 80%, 0.75);
+  --outline-subtle: rgba(255, 255, 255, 0.2);
+
+  --canvas-width: min(1200px, 95%);
+  --chessboard-placeholder-width: min(600px, 95%);
+
+  --paste-drop-color: rgb(194, 191, 184);
+}
+
+/* 
+----------------
+themes (not implemented)
+----------------
+*/
+
+/* todo
+  rename class
+  customize: 
+  -tile color
+  -font colors
+  -btn colors
+*/
+body.light {
+  --_footer-header: #1c1c21;
+  --header-bg-color: var(--_footer-header);
+  --footer-bg-color: #ceb1be;
+
+  --body-bg-color: #f1e4e8;
+
+  --backdrop-color: rgba(0, 0, 0, 0.55);
+  --link-bg-color: hsl(48, 100%, 99%);
+
+  --font-color-links: hsl(20, 6%, 9%);
+  --font-color-links: 20, 6%, 9%;
+
+  --light-tile: #dad3d5;
+  --dark-tile: #c7bcc0;
+
+  --paste-drop-color: #2d2d34;
+}
+
+/* 
+----------------
+header
+----------------
+*/
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  flex-grow: 1;
+  flex-shrink: 0;
+
+  width: 100%;
+  height: var(--header-height);
+
+  padding: 0.4rem;
+
+  color: var(--font-color-main);
+
+  background-color: var(--header-bg-color);
+
+  z-index: 2;
+}
+
+.header h3 {
+  margin-inline-end: 0.8rem;
+}
+
+.header p {
+  font-weight: 600;
+}
+
+.image-input-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: var(--label-bg-color);
+
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+
+  margin-block: 0.4rem;
+
+  text-align: center;
+
+  outline: 1px solid var(--outline-subtle);
+
+  cursor: pointer;
+  transition: background-color 80ms ease;
+}
+
+.image-input-label:focus,
+.image-input-label:focus-within,
+.image-input-label:active {
+  outline: 1px solid var(--outline-color);
+  background-color: var(--label-bg-color-hover);
+}
+
+.image-input-label:hover {
+  background-color: var(--label-bg-color-hover);
+}
+
+#image-input {
+  opacity: 0;
+  width: 0px;
+  height: 0px;
+
+  flex-shrink: 1;
+  outline: none;
+}
+
+/* 
+----------------
+main area
+----------------
+*/
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: calc(100% - var(--header-height));
+
+  flex-direction: column;
+
+  position: relative;
+  isolation: isolate;
+
+  background-color: var(--body-bg-color);
+}
+
+/* todo change drag-over styles */
+.drag-over {
+  transition: background-color 0 400ms;
+
+  background-color: transparent;
+  opacity: 1;
+
+  background-color: transparent;
+  opacity: 0.8;
+  background-image: radial-gradient(rgb(91, 84, 77) 1.55px, transparent 1.55px);
+  background-size: 31px 31px;
+}
+
+/* 
+----------------
+canvases
+----------------
+*/
+
+.canvas-container {
+  position: relative;
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+
+  isolation: isolate;
+}
+
+.canvas-container.active > .main-canvas {
+  max-width: 96%;
+  max-height: 92%;
+
+  border-radius: 5px;
+}
+
+.main-canvas {
+  background-color: var(--dark-tile);
+
+  box-shadow: 4px 4px 7px rgba(0, 0, 0, 0.463);
+}
+
+/* 
+----------------
+Paste/Drop hint div
+----------------
+*/
+
+/* todo change name */
+.paste-drop-tooltip {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: var(--paste-drop-color);
+
+  pointer-events: none;
+
+  font-weight: 600;
+  font-size: 2rem;
+  user-select: none;
+}
+
+.insert-object {
+  fill: currentColor;
+}
+
+/* 
+----------------
+utils
+----------------
+*/
+
+.pointer-none {
+  pointer-events: none;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+/* todo change canvas-size custom prop */
+@media screen and (max-width: 610px) {
+  .links a {
+    contain: content;
+    font-size: 1rem;
+  }
+
+  .link-wrapper {
+    max-height: 3.5rem;
+
+    overflow: hidden;
+    isolation: isolate;
+  }
+}
+
+.add-rect__btn {
+  position: absolute;
+  top: var(--header-height);
+
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+
+  gap: 5px;
+  padding: 5px;
+
+  border: none;
+  border-radius: 3px;
+
+  background-color: rgb(8, 8, 8);
+
+  font-weight: bolder;
+  color: var(--paste-drop-color);
+
+  cursor: pointer;
+  pointer-events: all;
+
+  z-index: 3;
+}
+
+.add-rect__btn > * {
+  pointer-events: none;
+}
+
+.rect-div {
+  width: 20px;
+  height: 20px;
+
+  border-radius: 3px;
+
+  border: 2px solid var(--paste-drop-color);
+}

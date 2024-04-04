@@ -1,0 +1,40 @@
+.chessboard {
+  contain: strict;
+
+  inset: 0;
+  margin: auto;
+
+  width: 96%;
+  max-width: var(--chessboard-placeholder-width);
+
+  aspect-ratio: 1/1;
+
+  position: absolute;
+
+  display: grid;
+  grid-template-rows: repeat(8, 1fr);
+  grid-template-columns: repeat(8, 1fr);
+
+  border-radius: 5px;
+
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+.tile {
+  grid-row: span 1;
+
+  background-color: var(--dark-tile);
+}
+
+.tile:nth-child(16n + 16),
+.tile:nth-child(16n + 14),
+.tile:nth-child(16n + 12),
+.tile:nth-child(16n + 10),
+.tile:nth-child(16n + 7),
+.tile:nth-child(16n + 5),
+.tile:nth-child(16n + 3),
+.tile:nth-child(16n + 1) {
+  background-color: var(--light-tile);
+}

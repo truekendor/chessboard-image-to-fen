@@ -1,0 +1,22 @@
+{
+  "name": "chessboard-image-to-fen",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.5.0",
+    "@typescript-eslint/parser": "^7.5.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vite-plugin-eslint": "^1.8.1"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.17.0",
+    "eslint": "^8.57.0"
+  }
+}

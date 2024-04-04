@@ -1,0 +1,14 @@
+description: Ultralytics best model trained on /content/gdrive/MyDrive/yolov9dir/data.yaml
+author: Ultralytics
+date: '2024-03-28T02:49:43.460030'
+version: 8.1.35
+license: AGPL-3.0 License (https://ultralytics.com/license)
+docs: https://docs.ultralytics.com
+stride: 32
+task: detect
+batch: 1
+imgsz:
+- 640
+- 640
+names:
+  0: chessboard
