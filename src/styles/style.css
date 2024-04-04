@@ -40,6 +40,9 @@ body,
 
   --font-color-main: rgb(224, 219, 215);
 
+  --sidebar-bg-color: #000000;
+
+  /* chessboard */
   --light-tile: hsl(0, 0%, 13%);
   --dark-tile: hsl(0, 0%, 9%);
 
