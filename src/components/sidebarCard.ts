@@ -16,8 +16,8 @@ export function createSidebarCard(
   // * ============
   // * button panel
 
-  const previewPredictionBtn = document.createElement("button");
-  previewPredictionBtn.textContent = "preview";
+  // const previewPredictionBtn = document.createElement("button");
+  // previewPredictionBtn.textContent = "preview";
 
   const predictBtn = document.createElement("button");
   predictBtn.textContent = "predict";
@@ -26,7 +26,11 @@ export function createSidebarCard(
   deleteCardBtn.textContent = "delete";
 
   const buttonsPanel = document.createElement("div");
-  buttonsPanel.append(previewPredictionBtn, predictBtn, deleteCardBtn);
+  buttonsPanel.append(
+    // previewPredictionBtn,
+    predictBtn,
+    deleteCardBtn
+  );
 
   predictBtn.addEventListener("click", () => {
     const [f1, f2] = NN.classification.classifyCanvas(
@@ -37,13 +41,13 @@ export function createSidebarCard(
     fenB.value = f2;
   });
 
-  previewPredictionBtn.addEventListener("pointerdown", () => {
-    //
-  });
+  // previewPredictionBtn.addEventListener("pointerdown", () => {
+  //   //
+  // });
 
-  previewPredictionBtn.addEventListener("pointerup", () => {
-    //
-  });
+  // previewPredictionBtn.addEventListener("pointerup", () => {
+  //   //
+  // });
 
   deleteCardBtn.addEventListener("click", () => {
     const index = detectionCanvasList.findIndex((el) => {
