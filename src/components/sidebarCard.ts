@@ -38,6 +38,18 @@ export function createSidebarCard(
 
     fenW.value = f1;
     fenB.value = f2;
+
+    const helperCanvas = new ChessBoardCanvas(
+      detectionCanvas.width,
+      detectionCanvas.height
+    );
+    const normFen = normalizeFenString(f1).filter((el) => el !== "/");
+    helperCanvas.drawChessboardFromFen(normFen);
+
+    previewCanvas.width = detectionCanvas.width;
+    previewCanvas.height = detectionCanvas.height;
+
+    previewCtx.putImageData(helperCanvas.imageData, 0, 0);
   });
 
   deleteCardBtn.addEventListener("click", () => {
@@ -111,14 +123,14 @@ export function createSidebarCard(
   helperCanvas.drawChessboardFromFen(normFen);
 
   const previewCanvas = document.createElement("canvas");
-  const ctx = previewCanvas.getContext("2d")!;
+  const previewCtx = previewCanvas.getContext("2d")!;
   previewCanvas.width = detectionCanvas.width;
   previewCanvas.height = detectionCanvas.height;
 
   previewCanvas.classList.add("preview-canvas");
   previewCanvas.classList.add("hidden");
 
-  ctx.putImageData(helperCanvas.imageData, 0, 0);
+  previewCtx.putImageData(helperCanvas.imageData, 0, 0);
 
   canvasWrapper.append(detectionCanvas.canvas, previewCanvas);
   // * ============
