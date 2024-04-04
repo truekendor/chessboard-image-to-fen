@@ -6,12 +6,12 @@ Pieces classification is done using [TensorFlow.js](https://www.tensorflow.org/j
 [MobileNet v3](https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v3_small_100_224/feature_vector/5/default/1) and transfer learning 
 trained on a procedurally generated dataset
 
-### Preview / Examples
+### Preview 
 
-!!!TODO
+![preview image 1](https://github.com/truekendor/chessboard-image-to-fen/blob/main/assets/preview_1.jpg)
 
-### Model
+![preview image 2](https://github.com/truekendor/chessboard-image-to-fen/blob/main/assets/preview_2.jpg)
 
-The model arch
+### Transfer learning model arch
 
 ![Model Arch](https://github.com/truekendor/chessboard-image-to-fen/blob/main/assets/model_arch.webp)
