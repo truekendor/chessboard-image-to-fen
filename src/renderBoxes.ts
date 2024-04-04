@@ -188,6 +188,8 @@ export function renderSVGBoxes(
     });
   }, 25);
 
+  expandSidebar();
+
   return detectionCanvasList;
 }
 
@@ -410,6 +412,10 @@ function sidebarRemovePredictions() {
   cards.forEach((card) => {
     detectionSidebar.removeChild(card);
   });
+}
+
+function expandSidebar() {
+  detectionSidebar.classList.remove("shrink");
 }
 
 const addNewRectBtn: HTMLButtonElement =
