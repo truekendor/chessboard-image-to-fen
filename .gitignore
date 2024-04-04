@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+/public/nn/dev
+.vite
+
 
 # dev NN models
 /public/nn/dev
