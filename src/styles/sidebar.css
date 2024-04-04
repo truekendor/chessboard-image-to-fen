@@ -107,6 +107,34 @@
   aspect-ratio: 1;
 }
 
+.detection-card__btn-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  width: 100%;
+}
+
+.detection-card__btn-panel > button {
+  border: none;
+  cursor: pointer;
+
+  padding: 4px 7px;
+  border-radius: 3px;
+}
+
+/* predict btn */
+.detection-card__btn-panel > button:nth-child(1) {
+  background-color: rgb(97, 97, 236);
+  color: white;
+}
+
+/* delete btn */
+.detection-card__btn-panel > button:nth-child(2) {
+  background-color: rgb(207, 52, 54);
+  color: white;
+}
+
 /* todo change styles */
 .detection-card .fen-container {
   width: 100%;

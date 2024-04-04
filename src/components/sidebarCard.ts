@@ -31,6 +31,7 @@ export function createSidebarCard(
     predictBtn,
     deleteCardBtn
   );
+  buttonsPanel.classList.add("detection-card__btn-panel");
 
   predictBtn.addEventListener("click", () => {
     const [f1, f2] = NN.classification.classifyCanvas(
