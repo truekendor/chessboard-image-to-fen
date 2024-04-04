@@ -2,6 +2,7 @@ import { NN } from "./nnHelper";
 import { MainCanvas } from "./main";
 import { DetectionCanvas } from "./detection-canvas";
 import { createSidebarCard } from "./components/sidebarCard";
+import { detectionSidebar } from "./sidebar";
 
 const detectionsOutlineContainer: HTMLDivElement = document.querySelector(
   ".outline-svg_container"
@@ -403,12 +404,11 @@ window.addEventListener("pointermove", (e) => {
 });
 
 function sidebarRemovePredictions() {
-  const sidebar = document.querySelector(".detection-sidebar")!;
   detectionCanvasList.length = 0;
 
-  const cards = sidebar.querySelectorAll(".detection-card");
+  const cards = detectionSidebar.querySelectorAll(".detection-card");
   cards.forEach((card) => {
-    sidebar.removeChild(card);
+    detectionSidebar.removeChild(card);
   });
 }
 

@@ -1,6 +1,5 @@
 import * as tf from "@tensorflow/tfjs";
 import { parseFenFromArray } from "./utils";
-
 import { renderSVGBoxes } from "./renderBoxes.js";
 
 export class NN {

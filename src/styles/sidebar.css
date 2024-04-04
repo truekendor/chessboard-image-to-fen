@@ -25,17 +25,29 @@
   border-radius: 5px;
 }
 
+.detection-sidebar.shrink {
+  height: min-content;
+  width: min-content;
+  padding: 0;
+}
+
+.detection-sidebar.shrink > *:not(.detection-sidebar__panel) {
+  display: none;
+  width: 0px;
+  height: 0px;
+}
+
 .detection-sidebar::-webkit-scrollbar {
   width: 8px;
 }
 
 .detection-sidebar::-webkit-scrollbar-track {
-  background: rgb(255, 253, 248); /* color of the tracking area */
+  background-color: rgb(48, 48, 48);
 }
 
 .detection-sidebar::-webkit-scrollbar-thumb {
-  background-color: rgb(48, 48, 48);
-  /* border-radius: 20px; */
+  background: hsl(39, 45%, 45%);
+  border-radius: 16px;
 }
 
 .detection-sidebar__panel {

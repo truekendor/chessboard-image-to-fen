@@ -1,8 +1,8 @@
 import { DetectionCanvas } from "../detection-canvas";
 import { NN } from "../nnHelper";
 import { detectionCanvasList } from "../renderBoxes";
+import { detectionSidebar as sidebar } from "../sidebar";
 
-const sidebar = document.querySelector(".detection-sidebar")!;
 const outlineSVG = document.querySelector(".outline-svg_svg")!;
 
 export function createSidebarCard(
@@ -113,8 +113,7 @@ export function createSidebarCard(
   return {
     card: cardWrapper,
     appendCardToSidebar: () => {
-      const resultsDiv = document.querySelector(".detection-sidebar")!;
-      resultsDiv.append(cardWrapper);
+      sidebar.append(cardWrapper);
     },
   };
 }
