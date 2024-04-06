@@ -463,5 +463,9 @@ addNewRectBtn.addEventListener("click", () => {
   detectionsOutlineSVG.append(group);
   detectionCanvasList.push(detectionCanvas);
 
-  createSidebarCard(detectionCanvas, "-", "-").appendCardToSidebar();
+  createSidebarCard(
+    detectionCanvas,
+    "8/8/8/8/8/8/8/8",
+    "8/8/8/8/8/8/8/8"
+  ).appendCardToSidebar();
 });
