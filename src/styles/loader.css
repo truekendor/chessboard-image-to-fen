@@ -23,6 +23,10 @@
   color: rgb(234, 234, 229);
 }
 
+.paste-drop-tooltip {
+  padding-inline: 10px;
+}
+
 .loader ~ .main-container .paste-drop-tooltip,
 .loader ~ .main-container .paste-drop-tooltip svg {
   color: transparent;
