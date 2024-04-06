@@ -2,7 +2,7 @@ import { NN } from "./nnHelper";
 import { MainCanvas } from "./main";
 import { DetectionCanvas } from "./detection-canvas";
 import { createSidebarCard } from "./components/sidebarCard";
-import { detectionSidebar } from "./sidebar";
+import { detectionSidebar, expandSidebar } from "./sidebar";
 
 const detectionsOutlineContainer: HTMLDivElement = document.querySelector(
   ".outline-svg_container"
@@ -84,12 +84,15 @@ function createResizableSVGGroup({
     group.style.setProperty("--y", `${pubY}px`);
 
     if (sidebarCanvas) {
+      const rectWidth = parseFloat(rect.getAttribute("width")!);
+      const rectHeight = parseFloat(rect.getAttribute("height")!);
+
       drawOutlinedArea({
-        x: pubX,
-        y: pubY,
+        x,
+        y,
         detectionCanvas: detectionCanvas,
-        styleWidth: detectionCanvas.width,
-        styleHeight: detectionCanvas.height,
+        styleWidth: rectWidth,
+        styleHeight: rectHeight,
       });
 
       return;
@@ -410,10 +413,6 @@ function sidebarRemovePredictions() {
   cards.forEach((card) => {
     detectionSidebar.removeChild(card);
   });
-}
-
-function expandSidebar() {
-  detectionSidebar.classList.remove("shrink");
 }
 
 const addNewRectBtn: HTMLButtonElement =
