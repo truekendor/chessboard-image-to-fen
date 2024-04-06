@@ -8,6 +8,7 @@ const detectionsOutlineContainer: HTMLDivElement = document.querySelector(
   ".outline-svg_container"
 )!;
 const detectionsOutlineSVG = detectionsOutlineContainer.querySelector("svg")!;
+const allGroups = Array.from(detectionsOutlineSVG.querySelectorAll("g"));
 
 export const detectionCanvasList: DetectionCanvas[] = [];
 
@@ -65,6 +66,7 @@ function createResizableSVGGroup({
   group.style.setProperty("--x", `${x1}px`);
   group.style.setProperty("--y", `${y1}px`);
 
+  // todo add "click" / "pointer(up/down)" listeners;
   // todo move outside
   rect.addEventListener("pointermove", (e) => {
     e.preventDefault();
@@ -88,8 +90,8 @@ function createResizableSVGGroup({
       const rectHeight = parseFloat(rect.getAttribute("height")!);
 
       drawOutlinedArea({
-        x,
-        y,
+        x: pubX,
+        y: pubY,
         detectionCanvas: detectionCanvas,
         styleWidth: rectWidth,
         styleHeight: rectHeight,
@@ -281,8 +283,22 @@ window.addEventListener("pointerdown", (e) => {
 
     sidebarCanvas = document.querySelector(`#dt-canvas-${dataId}`);
     groupToResize = document.querySelector(`#dt-group-${dataId}`);
-
     rectToResize = groupToResize?.querySelector("rect") || null;
+
+    if (groupToResize) {
+      groupToResize.classList.add("group-active");
+
+      detectionsOutlineContainer.querySelectorAll("g").forEach((g) => {
+        // @ts-expect-error Type narrowing now working
+        if (g !== groupToResize) {
+          g.classList.add("pointer-none");
+        }
+      });
+    }
+    if (rectToResize) {
+      rectToResize.classList.add("group-active");
+    }
+
     return;
   }
 
@@ -323,6 +339,10 @@ function resetCurrentOutlineState() {
     detectionsOutlineContainer.querySelectorAll("rect").forEach((rect) => {
       rect.classList.remove("pointer-none");
       rect.classList.remove("rect-active");
+    });
+
+    detectionsOutlineContainer.querySelectorAll("g").forEach((g) => {
+      g.classList.remove("pointer-none");
     });
   }
   circleIndex = 0;
@@ -435,6 +455,10 @@ addNewRectBtn.addEventListener("click", () => {
     height: 200,
     detectionCanvas,
   });
+
+  allGroups.length = 0;
+  const g = detectionsOutlineSVG.querySelectorAll("g");
+  allGroups.push(...g);
 
   detectionsOutlineSVG.append(group);
   detectionCanvasList.push(detectionCanvas);
