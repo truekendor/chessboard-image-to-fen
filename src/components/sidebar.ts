@@ -40,6 +40,7 @@ export class Sidebar {
   }
 
   private static _ = (() => {
+    // use "unused variable" to prevent build errors
     this._;
 
     this.sidebarExpandBtn.addEventListener("click", () => {
