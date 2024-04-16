@@ -39,6 +39,7 @@ export class Sidebar {
     });
   }
 
+  // eslint-disable-next-line no-unused-vars
   private static _ = (() => {
     this.sidebarExpandBtn.addEventListener("click", () => {
       this.sidebar.classList.toggle("shrink");
