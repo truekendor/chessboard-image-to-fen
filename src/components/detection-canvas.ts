@@ -1,4 +1,4 @@
-import { MainCanvas } from "./main";
+import { MainCanvas } from "../main";
 
 type DetectionCanvasConstructor = {
   score: number;

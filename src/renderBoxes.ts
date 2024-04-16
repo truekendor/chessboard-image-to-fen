@@ -1,108 +1,21 @@
 import { NN } from "./nnHelper";
 import { MainCanvas } from "./main";
-import { DetectionCanvas } from "./detection-canvas";
+import { DetectionCanvas } from "./components/detection-canvas";
 import { createSidebarCard } from "./components/sidebarCard";
-import { detectionSidebar, expandSidebar } from "./sidebar";
+import {
+  createResizableSVGGroup,
+  drawOutlinedArea,
+  recomputeCirclePosition,
+} from "./components/resizableSVGGroup";
+import { OutlineState } from "./outlineState";
+import { Sidebar } from "./components/sidebar";
 
-const detectionsOutlineContainer: HTMLDivElement = document.querySelector(
-  ".outline-svg_container"
-)!;
+export const detectionsOutlineContainer: HTMLDivElement =
+  document.querySelector(".outline-svg_container")!;
 const detectionsOutlineSVG = detectionsOutlineContainer.querySelector("svg")!;
 const allGroups = Array.from(detectionsOutlineSVG.querySelectorAll("g"));
 
 export const detectionCanvasList: DetectionCanvas[] = [];
-
-function createResizableSVGGroup({
-  x1,
-  y1,
-  width,
-  height,
-  detectionCanvas,
-}: {
-  x1: number;
-  y1: number;
-  width: number;
-  height: number;
-  detectionCanvas: DetectionCanvas;
-}) {
-  const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
-  const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-
-  group.id = `dt-group-${detectionCanvas.id}`;
-  rect.id = `dt-rect-${detectionCanvas.id}`;
-
-  group.setAttribute("data-id", `${detectionCanvas.id}`);
-  rect.setAttribute("data-id", `${detectionCanvas.id}`);
-
-  group.append(rect);
-
-  // create SVG circle
-  for (let i = 0; i < 8; i++) {
-    // we're skipping the central circle so the index to be adjusted
-    const adjustedIndex = i + (i >= 4 ? 1 : 0);
-
-    const circle = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "circle"
-    );
-
-    circle.setAttribute("data-index", `${adjustedIndex}`);
-
-    // todo move this logic to css
-    const cx = (adjustedIndex % 3) * 0.5 * width;
-    const cy = Math.floor(adjustedIndex / 3) * 0.5 * height;
-
-    circle.setAttribute("cx", `${cx}`);
-    circle.setAttribute("cy", `${cy}`);
-
-    group.append(circle);
-  }
-
-  group.classList.add("detection_group");
-
-  rect.setAttribute("width", `${width}`);
-  rect.setAttribute("height", `${height}`);
-
-  group.style.setProperty("--x", `${x1}px`);
-  group.style.setProperty("--y", `${y1}px`);
-
-  // todo add "click" / "pointer(up/down)" listeners;
-  // todo move outside
-  rect.addEventListener("pointermove", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (e.buttons !== 1) {
-      return;
-    }
-
-    const x = parseFloat(group.style.getPropertyValue("--x").slice(0, -2));
-    const y = parseFloat(group.style.getPropertyValue("--y").slice(0, -2));
-
-    const pubX = x + e.movementX;
-    const pubY = y + e.movementY;
-
-    group.style.setProperty("--x", `${pubX}px`);
-    group.style.setProperty("--y", `${pubY}px`);
-
-    if (sidebarCanvas) {
-      const rectWidth = parseFloat(rect.getAttribute("width")!);
-      const rectHeight = parseFloat(rect.getAttribute("height")!);
-
-      drawOutlinedArea({
-        x: pubX,
-        y: pubY,
-        detectionCanvas: detectionCanvas,
-        styleWidth: rectWidth,
-        styleHeight: rectHeight,
-      });
-
-      return;
-    }
-  });
-
-  return group;
-}
 
 export function renderSVGBoxes(
   boxes_data: Float32Array,
@@ -114,7 +27,7 @@ export function renderSVGBoxes(
   const ratio = MainCanvas.ratio;
 
   const prevGroups = detectionsOutlineSVG.querySelectorAll("g");
-  sidebarRemovePredictions();
+  Sidebar.removePredictions(detectionCanvasList);
 
   prevGroups.forEach((rect) => {
     detectionsOutlineSVG.removeChild(rect);
@@ -191,248 +104,9 @@ export function renderSVGBoxes(
     });
   }, 25);
 
-  expandSidebar();
+  Sidebar.expand();
 
   return detectionCanvasList;
-}
-
-// todo move to css calc() with css custom props
-function recomputeCirclePosition(
-  group: SVGGElement | HTMLElement,
-  width: number,
-  height: number
-) {
-  const circles = group.querySelectorAll("circle");
-
-  circles.forEach((circle, index) => {
-    const i = index + (index >= 4 ? 1 : 0);
-    const cx = (i % 3) * 0.5 * width;
-    const cy = Math.floor(i / 3) * 0.5 * height;
-
-    circle.setAttribute("cx", `${cx}`);
-    circle.setAttribute("cy", `${cy}`);
-  });
-}
-
-function drawOutlinedArea({
-  x,
-  y,
-  styleHeight,
-  styleWidth,
-  detectionCanvas,
-}: {
-  x: number;
-  y: number;
-  styleWidth: number;
-  styleHeight: number;
-  detectionCanvas: DetectionCanvas;
-}) {
-  const ratio = MainCanvas.ratio;
-  const mainContext = MainCanvas.ctx;
-  const { left, top } = MainCanvas.boundingRect;
-
-  const width = styleWidth * ratio;
-  const height = styleHeight * ratio;
-
-  if (width <= 0 || height <= 0) {
-    return;
-  }
-
-  const x1 = (x - left) * ratio;
-  const y1 = (y - top) * ratio;
-
-  detectionCanvas.width = width;
-  detectionCanvas.height = height;
-
-  detectionCanvas.x1 = x1;
-  detectionCanvas.y1 = y1;
-
-  try {
-    const data = mainContext.getImageData(x1, y1, width, height);
-
-    detectionCanvas.ctx.putImageData(data, 0, 0);
-  } catch {
-    return;
-  }
-}
-
-let circleIndex = 0;
-
-let currentDetectionCanvas: DetectionCanvas | null = null;
-let groupToResize: HTMLElement | null = null;
-let rectToResize: SVGRectElement | null = null;
-let circleTarget: SVGCircleElement | null = null;
-let sidebarCanvas: HTMLCanvasElement | null = null;
-
-window.addEventListener("pointerdown", (e) => {
-  if (!e.target) {
-    return;
-  }
-  const target = e.target as SVGCircleElement;
-  const dataIndex = target.getAttribute("data-index")!;
-  const dataId = target.getAttribute("data-id");
-
-  const rectClicked = dataId && !dataIndex;
-  const circleClicked = !!dataIndex;
-
-  if (rectClicked) {
-    currentDetectionCanvas =
-      detectionCanvasList.find((el) => {
-        return el.id === parseInt(dataId);
-      }) || null;
-
-    sidebarCanvas = document.querySelector(`#dt-canvas-${dataId}`);
-    groupToResize = document.querySelector(`#dt-group-${dataId}`);
-    rectToResize = groupToResize?.querySelector("rect") || null;
-
-    if (groupToResize) {
-      groupToResize.classList.add("group-active");
-
-      detectionsOutlineContainer.querySelectorAll("g").forEach((g) => {
-        // @ts-expect-error Type narrowing now working
-        if (g !== groupToResize) {
-          g.classList.add("pointer-none");
-        }
-      });
-    }
-    if (rectToResize) {
-      rectToResize.classList.add("group-active");
-    }
-
-    return;
-  }
-
-  if (!circleClicked) {
-    return;
-  }
-  circleIndex = parseInt(dataIndex);
-  circleTarget = target;
-
-  groupToResize = circleTarget.parentElement!;
-  rectToResize = groupToResize!.querySelector("rect")!;
-
-  groupToResize.classList.add("group-active");
-  rectToResize.classList.add("rect-active");
-
-  const id = parseInt(groupToResize.getAttribute("data-id")!);
-  sidebarCanvas = document.querySelector(`#dt-canvas-${id}`);
-
-  currentDetectionCanvas =
-    detectionCanvasList.find((el) => {
-      return el.id === id;
-    }) || null;
-
-  detectionsOutlineContainer.querySelectorAll("rect").forEach((rect) => {
-    rect.classList.add("pointer-none");
-  });
-});
-
-window.addEventListener("pointerup", resetCurrentOutlineState);
-window.addEventListener("pointerleave", resetCurrentOutlineState);
-window.addEventListener("pointerenter", resetCurrentOutlineState);
-
-function resetCurrentOutlineState() {
-  if (groupToResize) {
-    groupToResize.classList.remove("group-active");
-  }
-  if (rectToResize) {
-    detectionsOutlineContainer.querySelectorAll("rect").forEach((rect) => {
-      rect.classList.remove("pointer-none");
-      rect.classList.remove("rect-active");
-    });
-
-    detectionsOutlineContainer.querySelectorAll("g").forEach((g) => {
-      g.classList.remove("pointer-none");
-    });
-  }
-  circleIndex = 0;
-
-  groupToResize = null;
-  rectToResize = null;
-  circleTarget = null;
-  sidebarCanvas = null;
-  currentDetectionCanvas = null;
-}
-
-window.addEventListener("pointermove", (e) => {
-  if (e.buttons !== 1) {
-    return;
-  }
-
-  // !=============
-  // ! todo rewrite with tracking current pointer position
-  // ! instead of adding movement(x/y) components
-
-  if (
-    !circleTarget ||
-    !rectToResize ||
-    !groupToResize ||
-    !sidebarCanvas ||
-    !currentDetectionCanvas
-  ) {
-    return;
-  }
-
-  let rectWidth = parseFloat(rectToResize.getAttribute("width")!);
-  let rectHeight = parseFloat(rectToResize.getAttribute("height")!);
-
-  let rectX = parseFloat(
-    groupToResize.style.getPropertyValue("--x").slice(0, -2)
-  );
-  let rectY = parseFloat(
-    groupToResize.style.getPropertyValue("--y").slice(0, -2)
-  );
-
-  /**
-   * adjusted index values
-   * 0 1 2
-   * 3 * 5
-   * 6 7 8
-   */
-
-  rectX += e.movementX * (circleIndex % 3 === 0 ? 1 : 0);
-  rectY += e.movementY * (circleIndex <= 2 ? 1 : 0);
-
-  //   2 5 8 ->  width += movementX
-  //   0 3 6 ->  width -= movementX
-  const leftMultiplier = circleIndex % 3 === 0 ? -1 : 0;
-  const rightMultiplier = (circleIndex + 1) % 3 === 0 ? 1 : 0;
-  rectWidth += e.movementX * (leftMultiplier || rightMultiplier);
-
-  if (rectWidth > 10) {
-    groupToResize.style.setProperty("--x", `${rectX}px`);
-    rectToResize.setAttribute("width", `${rectWidth}`);
-  }
-
-  //   0 1 2 -> height -= movementY
-  //   6 7 8 -> height += movementY
-  const topMultiplier = circleIndex <= 2 ? -1 : 0;
-  const bottomMultiplier = circleIndex >= 6 ? 1 : 0;
-  rectHeight += e.movementY * (topMultiplier || bottomMultiplier);
-
-  if (rectHeight > 10) {
-    groupToResize.style.setProperty("--y", `${rectY}px`);
-    rectToResize.setAttribute("height", `${rectHeight}`);
-  }
-
-  recomputeCirclePosition(groupToResize, rectWidth, rectHeight);
-
-  drawOutlinedArea({
-    x: rectX,
-    y: rectY,
-    detectionCanvas: currentDetectionCanvas,
-    styleWidth: rectWidth,
-    styleHeight: rectHeight,
-  });
-});
-
-function sidebarRemovePredictions() {
-  detectionCanvasList.length = 0;
-
-  const cards = detectionSidebar.querySelectorAll(".detection-card");
-  cards.forEach((card) => {
-    detectionSidebar.removeChild(card);
-  });
 }
 
 const addNewRectBtn: HTMLButtonElement =
@@ -468,4 +142,146 @@ addNewRectBtn.addEventListener("click", () => {
     "8/8/8/8/8/8/8/8",
     "8/8/8/8/8/8/8/8"
   ).appendCardToSidebar();
+});
+
+window.addEventListener("pointerdown", (e) => {
+  if (!e.target) {
+    return;
+  }
+  const target = e.target as SVGCircleElement;
+  const dataIndex = target.getAttribute("data-index")!;
+  const dataId = target.getAttribute("data-id");
+
+  const rectClicked = dataId && !dataIndex;
+  const circleClicked = !!dataIndex;
+
+  if (rectClicked) {
+    OutlineState.currentDetectionCanvas =
+      detectionCanvasList.find((el) => {
+        return el.id === parseInt(dataId);
+      }) || null;
+
+    OutlineState.sidebarCanvas = document.querySelector(`#dt-canvas-${dataId}`);
+    OutlineState.groupToResize = document.querySelector(`#dt-group-${dataId}`);
+    OutlineState.rectToResize =
+      OutlineState.groupToResize?.querySelector("rect") || null;
+
+    if (OutlineState.groupToResize) {
+      OutlineState.groupToResize.classList.add("group-active");
+
+      detectionsOutlineContainer.querySelectorAll("g").forEach((g) => {
+        if (g !== (OutlineState.groupToResize as SVGGElement | null)) {
+          g.classList.add("pointer-none");
+        }
+      });
+    }
+    if (OutlineState.rectToResize) {
+      OutlineState.rectToResize.classList.add("group-active");
+    }
+
+    return;
+  }
+
+  if (!circleClicked) {
+    return;
+  }
+  OutlineState.circleIndex = parseInt(dataIndex);
+  OutlineState.circleTarget = target;
+
+  OutlineState.groupToResize = OutlineState.circleTarget.parentElement!;
+  OutlineState.rectToResize =
+    OutlineState.groupToResize!.querySelector("rect")!;
+
+  OutlineState.groupToResize.classList.add("group-active");
+  OutlineState.rectToResize.classList.add("rect-active");
+
+  const id = parseInt(OutlineState.groupToResize.getAttribute("data-id")!);
+  OutlineState.sidebarCanvas = document.querySelector(`#dt-canvas-${id}`);
+
+  OutlineState.currentDetectionCanvas =
+    detectionCanvasList.find((el) => {
+      return el.id === id;
+    }) || null;
+
+  detectionsOutlineContainer.querySelectorAll("rect").forEach((rect) => {
+    rect.classList.add("pointer-none");
+  });
+});
+
+window.addEventListener("pointerup", () => OutlineState.reset());
+window.addEventListener("pointerleave", () => OutlineState.reset());
+window.addEventListener("pointerenter", () => OutlineState.reset());
+
+window.addEventListener("pointermove", (e) => {
+  if (e.buttons !== 1) {
+    return;
+  }
+
+  // !=============
+  // ! todo rewrite with tracking current pointer position
+  // ! instead of adding movement(x/y) components
+
+  if (
+    !OutlineState.circleTarget ||
+    !OutlineState.rectToResize ||
+    !OutlineState.groupToResize ||
+    !OutlineState.sidebarCanvas ||
+    !OutlineState.currentDetectionCanvas
+  ) {
+    return;
+  }
+
+  let rectWidth = parseFloat(OutlineState.rectToResize.getAttribute("width")!);
+  let rectHeight = parseFloat(
+    OutlineState.rectToResize.getAttribute("height")!
+  );
+
+  let rectX = parseFloat(
+    OutlineState.groupToResize.style.getPropertyValue("--x").slice(0, -2)
+  );
+  let rectY = parseFloat(
+    OutlineState.groupToResize.style.getPropertyValue("--y").slice(0, -2)
+  );
+
+  /**
+   * adjusted index values
+   * 0 1 2
+   * 3 * 5
+   * 6 7 8
+   */
+
+  rectX += e.movementX * (OutlineState.circleIndex % 3 === 0 ? 1 : 0);
+  rectY += e.movementY * (OutlineState.circleIndex <= 2 ? 1 : 0);
+
+  //   2 5 8 ->  width += movementX
+  //   0 3 6 ->  width -= movementX
+  const leftMultiplier = OutlineState.circleIndex % 3 === 0 ? -1 : 0;
+  const rightMultiplier = (OutlineState.circleIndex + 1) % 3 === 0 ? 1 : 0;
+  rectWidth += e.movementX * (leftMultiplier || rightMultiplier);
+
+  if (rectWidth > 10) {
+    OutlineState.groupToResize.style.setProperty("--x", `${rectX}px`);
+    OutlineState.rectToResize.setAttribute("width", `${rectWidth}`);
+  }
+
+  //   0 1 2 -> height -= movementY
+  //   6 7 8 -> height += movementY
+  const topMultiplier = OutlineState.circleIndex <= 2 ? -1 : 0;
+  const bottomMultiplier = OutlineState.circleIndex >= 6 ? 1 : 0;
+  rectHeight += e.movementY * (topMultiplier || bottomMultiplier);
+
+  if (rectHeight > 10) {
+    OutlineState.groupToResize.style.setProperty("--y", `${rectY}px`);
+    OutlineState.rectToResize.setAttribute("height", `${rectHeight}`);
+  }
+
+  recomputeCirclePosition(OutlineState.groupToResize, rectWidth, rectHeight);
+
+  drawOutlinedArea({
+    x: rectX,
+    y: rectY,
+    detectionCanvas: OutlineState.currentDetectionCanvas,
+    styleWidth: rectWidth,
+    styleHeight: rectHeight,
+  });
 });

@@ -4,7 +4,7 @@ import { renderSVGBoxes } from "./renderBoxes.js";
 
 export class NN {
   // static URL = `https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v3_small_100_224/feature_vector/5/default/1`;
-  static mobilenetInputWidth = 224 as const;
+  static mobilenetInputSize = 224 as const;
 
   static models: {
     detectionModel: tf.GraphModel;
@@ -29,10 +29,10 @@ export class NN {
       ] as const);
 
     tf.tidy(() => {
+      // warmup models
       detectionModel.execute(tf.zeros(detectionModel.inputs[0].shape!));
-
       mobilenetFeatureVector.predict(
-        tf.zeros([1, NN.mobilenetInputWidth, NN.mobilenetInputWidth, 3])
+        tf.zeros([1, NN.mobilenetInputSize, NN.mobilenetInputSize, 3])
       );
     });
 
@@ -85,7 +85,7 @@ class DetectionHelper {
       modelHeight
     ); // preprocess image
 
-    const res: tf.Tensor<tf.Rank> = model.execute(input) as tf.Tensor4D; // inference model
+    const res: tf.Tensor4D = model.execute(input) as tf.Tensor4D; // inference model
 
     const transRes = res.transpose([0, 2, 1]); // transpose result [b, det, n] => [b, n, det]
     const boxes = tf.tidy(() => {
@@ -199,7 +199,7 @@ class ClassificationHelper {
     "11": "K",
     // empty space/tile
     "12": "s",
-  };
+  } as const;
 
   private static pieceKeys = Object.keys(
     this.chessPiecesLookup
@@ -311,7 +311,7 @@ class ClassificationHelper {
       // Resize image to mobilenet size
       const resizedTensorFrame = tf.image.resizeBilinear(
         canvasAsTensor,
-        [NN.mobilenetInputWidth, NN.mobilenetInputWidth],
+        [NN.mobilenetInputSize, NN.mobilenetInputSize],
         true
       );
 

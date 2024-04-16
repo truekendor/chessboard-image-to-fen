@@ -10,7 +10,7 @@ export function createLichessLink(fen: string, reversedFen: string) {
   linkLichessReversed.textContent = `Lichess black perspective: ${reversedFen}`;
   linkLichessReversed.target = "_blank";
 
-  return [linkLichess, linkLichessReversed];
+  return [linkLichess, linkLichessReversed] as const;
 }
 
 export function createCopyButtons(fen: string, reversedFen: string) {
@@ -32,5 +32,5 @@ export function createCopyButtons(fen: string, reversedFen: string) {
     navigator.clipboard.writeText(reversedFen);
   });
 
-  return [buttonWhite, buttonBlack];
+  return [buttonWhite, buttonBlack] as const;
 }

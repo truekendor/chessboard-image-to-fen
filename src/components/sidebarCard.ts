@@ -1,8 +1,8 @@
-import { DetectionCanvas } from "../detection-canvas";
+import { DetectionCanvas } from "./detection-canvas";
 import { NN } from "../nnHelper";
-import { ChessBoardCanvas } from "../previewCanvas";
+import { ChessBoardCanvas } from "./previewCanvas";
 import { detectionCanvasList } from "../renderBoxes";
-import { detectionSidebar as sidebar } from "../sidebar";
+import { Sidebar } from "./sidebar";
 import { normalizeFenString } from "../utils";
 
 const outlineSVG = document.querySelector(".outline-svg_svg")!;
@@ -59,13 +59,14 @@ export function createSidebarCard(
 
     detectionCanvasList.splice(index, 1);
 
-    const cards = sidebar.querySelectorAll(".detection-card");
+    const cards = Sidebar.getPredictionCards();
+
     cards.forEach((card) => {
       const cardCanvas = card.querySelector("canvas")!;
       const dataId = parseInt(cardCanvas.getAttribute("data-id")!);
 
       if (dataId === detectionCanvas.id) {
-        sidebar.removeChild(card);
+        Sidebar.removeCard(card);
       }
     });
 
@@ -148,7 +149,7 @@ export function createSidebarCard(
   return {
     card: cardWrapper,
     appendCardToSidebar: () => {
-      sidebar.append(cardWrapper);
+      Sidebar.addCard(cardWrapper);
     },
   };
 }
