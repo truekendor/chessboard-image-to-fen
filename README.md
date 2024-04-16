@@ -1,4 +1,4 @@
-# Chessboard image to FEN online converter. [Live demo here](https://truekendor.github.io/chessboard-image-to-fen/)
+# Chessboard image to FEN online converter with automatic chessboard detection. [Live demo here](https://truekendor.github.io/chessboard-image-to-fen/)
 
 Chessboard detection is done using [Yolov8n.pt](https://github.com/ultralytics/ultralytics) trained on a custom dataset and exported to Tensorflow.JS
 
