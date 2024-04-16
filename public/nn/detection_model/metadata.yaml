@@ -1,7 +1,7 @@
-description: Ultralytics best model trained on /content/gdrive/MyDrive/yolov9dir/data.yaml
+description: Ultralytics best model trained on /content/gdrive/MyDrive/yolo_training_data/data.yaml
 author: Ultralytics
-date: '2024-03-28T02:49:43.460030'
-version: 8.1.35
+date: '2024-04-16T14:04:29.495074'
+version: 8.1.47
 license: AGPL-3.0 License (https://ultralytics.com/license)
 docs: https://docs.ultralytics.com
 stride: 32
