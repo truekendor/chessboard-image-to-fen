@@ -2,7 +2,6 @@ import { isNumber } from "../utils";
 
 const img = new Image();
 
-// todo change order
 // K Q B N R P
 img.src = "pieces.png";
 
