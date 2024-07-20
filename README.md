@@ -4,7 +4,7 @@ Chessboard detection is done using [Yolov8n.pt](https://github.com/ultralytics/u
 
 Pieces classification is done using [TensorFlow.js](https://www.tensorflow.org/js), 
 [MobileNet v3](https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v3_small_100_224/feature_vector/5/default/1) and transfer learning 
-trained on a procedurally generated dataset
+ trained on a procedurally generated dataset
 
 ### Preview 
 
