@@ -20,6 +20,7 @@ export function createSidebarCard(
 
   const previewPredictionBtn = document.createElement("button");
   previewPredictionBtn.textContent = "preview";
+  previewPredictionBtn.classList.add(`data-predict-id-${detectionCanvas.id}`);
 
   const predictBtn = document.createElement("button");
   predictBtn.textContent = "predict";
@@ -32,6 +33,8 @@ export function createSidebarCard(
   buttonsPanel.classList.add("detection-card__btn-panel");
 
   predictBtn.addEventListener("click", () => {
+    previewPredictionBtn.textContent = "preview";
+
     const [f1, f2] = NN.classification.classifyCanvas(
       detectionCanvas.toGrayScale().canvas
     );

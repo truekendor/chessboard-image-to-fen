@@ -1,6 +1,7 @@
 import { DetectionCanvas } from "./detection-canvas";
 import { MainCanvas } from "../main";
 import { OutlineState } from "../outlineState";
+import { Sidebar } from "./sidebar";
 
 export function createResizableSVGGroup({
   x1,
@@ -86,6 +87,11 @@ export function createResizableSVGGroup({
         styleWidth: rectWidth,
         styleHeight: rectHeight,
       });
+
+      const btn = Sidebar._sidebar.querySelector(
+        `.data-predict-id-${detectionCanvas.id}`
+      )!;
+      btn.textContent = "preview (old)";
 
       return;
     }

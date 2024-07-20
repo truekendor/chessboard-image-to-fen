@@ -22,6 +22,10 @@ export class Sidebar {
     return cards;
   }
 
+  static get _sidebar() {
+    return this.sidebar;
+  }
+
   static removeCard(card: Element) {
     this.sidebar.removeChild(card);
   }
