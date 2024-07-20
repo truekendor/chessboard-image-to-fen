@@ -2,7 +2,8 @@ import { isNumber } from "../utils";
 
 const img = new Image();
 
-// Q K R N B P
+// todo change order
+// K Q B N R P
 img.src = "pieces.png";
 
 class PieceHelper {
@@ -34,40 +35,40 @@ class PieceHelper {
   }
 
   get q() {
-    return this.#cropArea({ row: 0, column: 0 });
-  }
-  get k() {
-    return this.#cropArea({ row: 0, column: 1 });
-  }
-  get r() {
-    return this.#cropArea({ row: 0, column: 2 });
-  }
-  get n() {
-    return this.#cropArea({ row: 0, column: 3 });
-  }
-  get b() {
-    return this.#cropArea({ row: 0, column: 4 });
-  }
-  get p() {
-    return this.#cropArea({ row: 0, column: 5 });
-  }
-  get Q() {
-    return this.#cropArea({ row: 1, column: 0 });
-  }
-  get K() {
     return this.#cropArea({ row: 1, column: 1 });
   }
-  get R() {
-    return this.#cropArea({ row: 1, column: 2 });
+  get k() {
+    return this.#cropArea({ row: 1, column: 0 });
   }
-  get N() {
-    return this.#cropArea({ row: 1, column: 3 });
-  }
-  get B() {
+  get r() {
     return this.#cropArea({ row: 1, column: 4 });
   }
-  get P() {
+  get n() {
+    return this.#cropArea({ row: 1, column: 3 });
+  }
+  get b() {
+    return this.#cropArea({ row: 1, column: 2 });
+  }
+  get p() {
     return this.#cropArea({ row: 1, column: 5 });
+  }
+  get Q() {
+    return this.#cropArea({ row: 0, column: 1 });
+  }
+  get K() {
+    return this.#cropArea({ row: 0, column: 0 });
+  }
+  get R() {
+    return this.#cropArea({ row: 0, column: 4 });
+  }
+  get N() {
+    return this.#cropArea({ row: 0, column: 3 });
+  }
+  get B() {
+    return this.#cropArea({ row: 0, column: 2 });
+  }
+  get P() {
+    return this.#cropArea({ row: 0, column: 5 });
   }
 }
 
