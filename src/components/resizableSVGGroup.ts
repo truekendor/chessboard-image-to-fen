@@ -88,11 +88,6 @@ export function createResizableSVGGroup({
         styleHeight: rectHeight,
       });
 
-      const btn = Sidebar._sidebar.querySelector(
-        `.data-predict-id-${detectionCanvas.id}`
-      )!;
-      btn.textContent = "preview (old)";
-
       return;
     }
   });
@@ -150,6 +145,11 @@ export function drawOutlinedArea({
 
   detectionCanvas.x1 = x1;
   detectionCanvas.y1 = y1;
+
+  const btn = Sidebar._sidebar.querySelector(
+    `.data-predict-id-${detectionCanvas.id}`
+  )!;
+  btn.textContent = "preview (old)";
 
   try {
     const data = mainContext.getImageData(x1, y1, width, height);
